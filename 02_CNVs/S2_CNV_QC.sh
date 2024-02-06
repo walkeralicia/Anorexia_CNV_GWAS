@@ -4,10 +4,10 @@
 # and generates a corresponding set of cfiles with BMI as the UKB phenotypic outcome
 
 #============ create plink .map file for cfile data  (PLINK V1.07)===================================
-plink="/QRISdata/Q4399/software/plink-1.07-x86_64/plink"
+p="/QRISdata/Q4399/software/plink-1.07-x86_64/plink"
 cfile="/QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN"
 
-${plink} --noweb --cfile ${cfile} --cnv-make-map --out ${cfile}
+${p} --noweb --cfile ${cfile} --cnv-make-map --out ${cfile}
 
 
 
@@ -35,7 +35,7 @@ echo -e "FID\tIID\tCHR\tBP1\tBP2\tTYPE\tSCORE\tSITES" > "${cfile}_hg38.cnv"
 # Sort the input files
 sort -k1,1 "${cfile}_temp.cnv" > "${cfile}_temp.sorted.cnv"
 sort -k4,4 "${cfile}_postliftover.bed" > "${cfile}_postliftover.sorted.bed"
-join -1 1 -2 4 -o 1.2,1.3,1.4,2.2,2.3,1.6,1.7,1.8 "${cfile}_temp.sorted.cnv" "${cfile}_postliftover.sorted.bed" | tr ' ' '\t' >> "${cfile}_hg38.cnv"
+join -1 1 -2 4 -o 1.2,1.3,1.4,2.2,2.3,1.7,1.8,1.9 "${cfile}_temp.sorted.cnv" "${cfile}_postliftover.sorted.bed" | tr ' ' '\t' >> "${cfile}_hg38.cnv"
 unset IFS 
 
 # Clean up temporary file
@@ -44,7 +44,7 @@ rm "${cfile}_temp.cnv" "${cfile}_temp.sorted.cnv" "${cfile}_postliftover.sorted.
 
 #================ create new plink .fam and .map cfiles with hg38 coordinates=========================================
 cp UKBB_CNVs_for_AN.fam UKBB_CNVs_for_AN_hg38.fam
-${plink} --noweb --cfile UKBB_CNVs_for_AN_hg38 --cnv-make-map --out UKBB_CNVs_for_AN_hg38
+${p} --noweb --cfile UKBB_CNVs_for_AN_hg38 --cnv-make-map --out UKBB_CNVs_for_AN_hg38
 
 
 #=============== create a second set of plink cfiles for BMI as the outcome ============================================
@@ -67,13 +67,13 @@ awk 'NR==FNR{a[$1]=$2; next} {print $1, $2, a[$1]}' "${output_file}.temp.bmi" "$
 awk 'NR==FNR{a[$1]=$3; next} {print $1, $1, $2, $3, $4, a[$1]}' "${output_file}.temp.join1" "${cfile}.temp.fam" > "${output_file}.temp.fam.join1"
 # Clean up temporary files
 rm "${cfile}.temp.fam" "${output_file}.temp.map" "${output_file}.temp.bmi" "${output_file}.temp.join1"
-mv "${output_file}.temp.fam.join1" UKBB_CNVs_for_AN_hg38_BMI_temp.fam
+mv "${output_file}.temp.fam.join1" ${output_file}_temp.fam
 ## replace empty cells for BMI with -9
-awk -v OFS="\t" '{if ($6=="") $6=-9; print}' UKBB_CNVs_for_AN_hg38_BMI_temp.fam > UKBB_CNVs_for_AN_hg38_BMI.fam
+awk -v OFS="\t" '{if ($6=="") $6=-9; print}' ${output_file}_temp.fam > ${output_file}.fam
 
 # create plink cfiles (.cnv and .map for BMI outcome)
-cp UKBB_CNVs_for_AN_hg38.cnv UKBB_CNVs_for_AN_hg38_BMI.cnv
-${plink} --noweb --cfile UKBB_CNVs_for_AN_hg38_BMI --cnv-make-map --out UKBB_CNVs_for_AN_hg38_BMI
+cp ${cfile}.cnv ${output_file}.cnv
+${p} --noweb --cfile ${output_file} --cnv-make-map --out ${output_file}
 
 
 
