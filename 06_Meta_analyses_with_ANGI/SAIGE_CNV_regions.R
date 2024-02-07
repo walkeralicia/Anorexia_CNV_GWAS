@@ -1,38 +1,30 @@
 
-p="/afm01/UQ/Q4399/software/plink-1.07-x86_64/plink"
-Input="/afm01/UQ/Q4399/Anorexia/UKB/plink_files"
-${p} --noweb --cfile ${Input}/UKBB_CNVs_for_AN_hg38 --cnv-del --cnv-write --out ${Input}/UKBB_CNVs_for_AN_hg38.DEL
-${p} --noweb --cfile ${Input}/UKBB_CNVs_for_AN_hg38.DEL --cnv-make-map --out ${Input}/UKBB_CNVs_for_AN_hg38.DEL
 
-${p} --noweb --cfile ${Input}/UKBB_CNVs_for_AN_hg38 --cnv-dup --cnv-write --out ${Input}/UKBB_CNVs_for_AN_hg38.DUP
-${p} --noweb --cfile ${Input}/UKBB_CNVs_for_AN_hg38.DUP --cnv-make-map --out ${Input}/UKBB_CNVs_for_AN_hg38.DUP
+#================ This script extracts UKB CNVs intersecting novel ANGI CNV regions associated with AN status =====================================
 
-
-module load R/4.1.2
-export R_LIBS=/scratch/90days/uqawal15/R_libraries/new_rlib_4.1.2
-cd /afm01/UQ/Q4399/Anorexia/UKB/burden_analysis/SAIGE/plots
-
-#################
-R
+# load R libraries
 library(dplyr)
 library(data.table)
 
-cnvrs <- read.csv("/afm01/UQ/Q4399/Anorexia/ANGI/results/CNVR_zoonomia.csv", header=T)
-saige_dels <- read.table("/afm01/UQ/Q4399/Anorexia/UKB/burden_analysis/SAIGE/step2/DEL_SAIGE_step2_AN_rare.txt", header=T)
-saige_dups <- read.table("/afm01/UQ/Q4399/Anorexia/UKB/burden_analysis/SAIGE/step2/DUP_SAIGE_step2_AN_rare.txt", header=T)
+# load data
+cnvrs <- read.csv("/QRISdata/Q4399/Anorexia/ANGI/results/ANGI_CNVR_zoonomia.csv", header=T)
+wkdir <- "/QRISdata/Q4399/Anorexia/UKB/burden_analysis/SAIGE/step2"
+saige_dels <- read.table(paste(wkdir, "DEL_SAIGE_step2_AN_rare.txt", sep="/"), header=T)
+saige_dups <- read.table(paste(wkdir, "DUP_SAIGE_step2_AN_rare.txt", sep="/"), header=T)
 
+# begin UKB CNV overlap with novel ANGI CNV regions ================================================================
 
 cnvs <- data.frame()
 for (i in 1:nrow(cnvrs)){
   
-  ## extract CNVR boundaries
+  ## extract ANGI CNVR boundaries ======================================================
   geno <- cnvrs[i, "Genotype"]
   CNVR <- cnvrs[i, "CNVR"]
   c <- gsub("chr", "", strsplit(CNVR, ":")[[1]][1])
   start <- as.numeric(strsplit(strsplit(CNVR, ":")[[1]][2], "-")[[1]][1])
   end <- as.numeric(strsplit(strsplit(CNVR, ":")[[1]][2], "-")[[1]][2])
   
-  ## extract Saige results within CNVR with the corresponding genotype
+  ## extract UKB SAIGE CNVb GWAS results within CNVR with the corresponding genotype ====
   if (geno=="Deletion"){
     cnvr_saige <- saige_dels
   } else {
@@ -41,14 +33,14 @@ for (i in 1:nrow(cnvrs)){
   cnvr_saige <- cnvr_saige %>% filter(CHR==c) %>% filter(MarkerID >= start & MarkerID <= end)
   num_breakpoints <- nrow(cnvr_saige)
   
-  ## extract CNVs that intersect the CNVR
+  ## extract UKB CNVs that intersect the CNVR ===================================================
   cnvr_tmp <- c(c, start, end, "tmp")
   cnvr_tmp <- data.frame(t(unlist(cnvr_tmp)))
   fwrite(cnvr_tmp, "TMP1", col.names = F, sep = "\t")
   if (geno=="Deletion"){
-    system(paste("/afm01/UQ/Q4399/software/plink-1.07-x86_64/plink --noweb --cfile /afm01/UQ/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38.DEL --cnv-intersect TMP1 --cnv-write --out TMP2"))
+    system(paste("plink --noweb --cfile UKBB_CNVs_for_AN_hg38.DEL --cnv-intersect TMP1 --cnv-write --out TMP2"))
   } else {
-    system(paste("/afm01/UQ/Q4399/software/plink-1.07-x86_64/plink --noweb --cfile /afm01/UQ/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38.DUP --cnv-intersect TMP1 --cnv-write --out TMP2"))
+    system(paste("plink --noweb --cfile UKBB_CNVs_for_AN_hg38.DUP --cnv-intersect TMP1 --cnv-write --out TMP2"))
   }
   tracks <- fread("TMP2.cnv")
   fam <- fread("TMP2.fam")
@@ -57,7 +49,7 @@ for (i in 1:nrow(cnvrs)){
   num_cont <- nrow(tracks_controls)
   num_case <- nrow(tracks)-nrow(tracks_controls)
   
-  ## extract SAIGE results for top breakpoint
+  ## extract UKB SAIGE result for the top ANGI breakpoint within corresponding CNVR ============
   cnvr_top <- cnvr_saige %>% filter(p.value ==min(cnvr_saige$p.value))
   cnvr_top <- cnvr_top[1,]
   top_bp <- cnvr_top[, "MarkerID"]
@@ -69,7 +61,8 @@ for (i in 1:nrow(cnvrs)){
   LCI <- round(exp(beta-1.96*se), dp)
   UCI <- round(exp(beta+1.96*se), dp)
   CI <- paste0("(", LCI, "-", UCI, ")")
-  ### write table of results
+  
+  ## write table of results ==============================================
   cnvrs_angi <- cnvrs %>% select(Cytoband, CNVR, Genotype, Length, Num_Probes, Num_Breakpoints,
                                  N_Case_CNV, N_Cont_CNV, 
                                  Top_Breakpoint, Pval, OR, CI)
@@ -83,4 +76,4 @@ for (i in 1:nrow(cnvrs)){
   
 }
 
-write.csv(cnvs, "angi_ukb_cnvrs.csv")
+write.csv(cnvs, paste(wkdir, "angi_ukb_cnvrs.csv", sep="/"))
