@@ -38,8 +38,11 @@ drCNVS <- "/QRISdata/Q4399/Anorexia/UKB/burden_analysis/drCNVs"
 file_name <- "UKBB_CNVs_for_AN_hg38"
 
 system(paste(p, "--noweb --cfile", paste(wkdir, paste0(file_name, ".DUP"), sep = "/"), "--cnv-intersect", paste(drCNVS, "triplosensitive_list.txt", sep = "/"), "--cnv-write", "--out", paste(wkdir, paste0(file_name, ".DUP.sensitive"), sep = "/")))
+
 system(paste(p, "--noweb --cfile", paste(wkdir, paste0(file_name, ".DUP.sensitive"), sep = "/"), "--cnv-make-map", "--out", paste(wkdir, paste0(file_name, ".DUP.sensitive"), sep = "/")))
+
 system(paste(p, "--noweb --cfile", paste(wkdir, paste0(file_name, ".DEL"), sep = "/"), "--cnv-intersect", paste(drCNVS, "haploinsufficient_list.txt", sep = "/"), "--cnv-write", "--out", paste(wkdir, paste0(file_name, ".DEL.sensitive"), sep = "/")))
+
 system(paste(p, "--noweb --cfile", paste(wkdir, paste0(file_name, ".DEL.sensitive"), sep = "/"), "--cnv-make-map", "--out", paste(wkdir, paste0(file_name, ".DEL.sensitive"), sep = "/")))
 
 
