@@ -16,7 +16,7 @@ dels <- read.table(paste(input, "DEL_SAIGE_step2_AN.txt", sep="/"), header=T)
 dups <- read.table(paste(input, "DUP_SAIGE_step2_AN.txt", sep="/"), header=T)
 
 #======= Read in Genomic cytoband information===============================================
-cytoband <- fread("cytoBand.txt", header=FALSE) %>% as.data.frame()
+cytoband <- fread(paste(output, "cytoBand.txt", sep="/"), header=FALSE) %>% as.data.frame()
 cytoband$CHR <- as.numeric(gsub("chr", "", cytoband$V1))
 
 #======= calculating cnv frequency using genotype counts ====================================

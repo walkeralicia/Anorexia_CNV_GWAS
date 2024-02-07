@@ -139,7 +139,7 @@ res_controls <- res_controls %>% as.data.frame()
 res_cases <- do.call(rbind, res_cases)
 res_cases <- res_cases %>% as.data.frame()
 write.table(res_controls, paste(devCNV_path, "BMI/UKBB_devCNVs_BMI_controls.txt", sep="/"), col.names=T, row.names=F, quote=F, sep="\t")
-write.table(res_cases, paste(devCNV_path, "BMI/devCNVs_BMI_cases_UKB.txt", sep="/"), col.names=T, row.names=F, quote=F, sep="\t")
+write.table(res_cases, paste(devCNV_path, "BMI/UKBB_devCNVs_BMI_cases_UKB.txt", sep="/"), col.names=T, row.names=F, quote=F, sep="\t")
 
 
 
