@@ -4,9 +4,10 @@
 # Load required R libraries
 library(dplyr)
 library(data.table)
+wkdir="/QRISdata/Q4399/Anorexia/UKB/burden_analysis/SAIGE"
 
 #======= Read in Genomic cytoband information===============================================
-cytoband <- fread(paste(output, "/QRISdata/Q4399/Anorexia/UKB/burden_analysis/SAIGE/plots/cytoBand.txt", sep="/"), header=FALSE) %>% as.data.frame()
+cytoband <- fread("cytoBand.txt", header=FALSE) %>% as.data.frame()
 cytoband$CHR <- as.numeric(gsub("chr", "", cytoband$V1))
 cytoband$CHR <- gsub("X", "23", cytoband$CHR)
 cytoband$CHR <- as.numeric(cytoband$CHR)
@@ -26,7 +27,7 @@ del_cnvs <- fread("/QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg3
 breakpoints <- unique(c(del_cnvs$BP1, del_cnvs$BP2))
 
 #=== Load SAIGE rare CNV breakpoint GWAS results for deletions ====================
-dels <- read.table("/QRISdata/Q4399/Anorexia/UKB/burden_analysis/SAIGE/step2/DEL_SAIGE_step2_AN_rare.txt", header=TRUE)
+dels <- read.table(paste(wkdir, "step2/DEL_SAIGE_step2_AN_rare.txt", sep="/"), header=TRUE)
 colnames(dels)[3] <- "ID"
 
 #=== Identify novel AN-association CNV regions looping by chromosome================
@@ -53,7 +54,7 @@ for (c in 1:23){
     print("rs not in CNVR yet")
     
     ## save temp output file
-    rs_file <- paste0("/QRISdata/Q4399/Anorexia/UKB/burden_analysis/SAIGE/CNVR/DEL/Chr", chr, "_rs", rs)
+    rs_file <- paste0(wkdir, "/CNVR/DEL/Chr", chr, "_rs", rs)
     fwrite(data.frame(ID = rs), rs_file, col.names = F, row.names = F, quote = F, sep = "\t")
     
     # Run PLINK: detect probes in LD
@@ -124,7 +125,7 @@ dup_cnvs <- fread("/QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg3
 breakpoints <- unique(c(dup_cnvs$BP1, dup_cnvs$BP2))
 
 #=== Load SAIGE rare CNV breakpoint GWAS results for deletions ====================
-dups <- read.table("/QRISdata/Q4399/Anorexia/UKB/burden_analysis/SAIGE/step2/DUP_SAIGE_step2_AN_rare.txt", header=TRUE)
+dups <- read.table(paste(wkdir, "step2/DUP_SAIGE_step2_AN_rare.txt", sep="/"), header=TRUE)
 colnames(dups)[3] <- "ID"
 
 #=== Identify novel AN-association CNV regions looping by chromosome================
@@ -150,7 +151,7 @@ for (c in 1:23){
     print("rs not in CNVR yet")
     
     ## save temp output file
-    rs_file <- paste0("/QRISdata/Q4399/Anorexia/UKB/burden_analysis/SAIGE/CNVR/DUP/Chr", chr, "_rs", rs)
+    rs_file <- paste0(wkdir, "/CNVR/DUP/Chr", chr, "_rs", rs)
     fwrite(data.frame(ID = rs), rs_file, col.names = F, row.names = F, quote = F, sep = "\t")
     
     # Run PLINK: detect probes in LD
@@ -217,9 +218,9 @@ both_risk_ord <- both_risk[order(both_risk$Pval),]
 genes <- read.table("geneMatrix.tsv", header=TRUE, fill=TRUE)
 genes <- genes %>% filter(gene_type=="protein_coding")
 genes3 <- genes[, c(8,9,10,1)]
-fwrite(genes3, "Genes", col.names=F, sep="\t")
+fwrite(genes3, paste("CNVR/Genes",sep="/") col.names=F, sep="\t")
 genes2 <- genes[, c(8,9,10,2)]
-fwrite(genes2, "Genes2", col.names=F, sep="\t")
+fwrite(genes2, paste(wkdir, "CNVR/Genes2", sep="/"), col.names=F, sep="\t")
 
 #===== Intersect novel CNVRs with genes ==========================================================
 cnvs <- both_risk_ord
@@ -234,14 +235,14 @@ for (i in 1:nrow(both_risk_ord)){
   cnvr <- cnvs2[i,]
   fwrite(cnvr, "TMP1", col.names = F, sep = "\t")
   system(paste("bedtools intersect -wao -a TMP1",
-               "-b Genes",
+               "-b /QRISdata/Q4399/Anorexia/UKB/burden_analysis/SAIGE/CNVR/Genes",
                "> TMP2"))
   g <- fread("TMP2")
   all <- paste(g$V8,collapse=" ")
   both_risk_ord$Genes[i] <- all
   
   system(paste("bedtools intersect -wao -a TMP1",
-               "-b Genes2",
+               "-b /QRISdata/Q4399/Anorexia/UKB/burden_analysis/SAIGE/CNVR/Genes2",
                "> TMP2"))
   g <- fread("TMP2")
   all <- paste(g$V8,collapse=" ")
@@ -252,7 +253,7 @@ both_risk_ord$Genes <- ifelse(both_risk_ord$Genes == ".", NA, both_risk_ord$Gene
 both_risk_ord$Gene_Names <- ifelse(both_risk_ord$Gene_Names == ".", NA, both_risk_ord$Gene_Names)
 
 #==== Save all results==========================
-write.table(both_risk_ord, "/QRISdata/Q4399/Anorexia/UKB/burden_analysis/SAIGE/CNVR/all_CNVR_risk_genes.csv", col.names=T, row.names=F, quote=F, sep="," )
+write.table(both_risk_ord, paste(wkdir, "CNVR/all_CNVR_risk_genes.csv", sep="/"), col.names=T, row.names=F, quote=F, sep="," )
 
 
 
