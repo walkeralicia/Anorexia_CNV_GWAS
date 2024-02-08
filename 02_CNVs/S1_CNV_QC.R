@@ -30,8 +30,10 @@ cases <- read.table("/QRISdata/Q4399/Anorexia/UKB/AN_IDs/case_ids.txt", header=F
 controls <- read.table("/QRISdata/Q4399/Anorexia/UKB/AN_IDs/controls_ids.txt", header=FALSE)
 
 # Filter for UKB AN cases and controls that have CNV calls=====================================================
+
 ## UKB ID file to map IDs between CNV calls and other UKB phenotypes
 map <- read.table("/QRISdata/Q2909/pheno/RunID_670814_CNV/ukb12505bridge14421.txt")
+
 ## cases (1,260 people)
 cases2 <- cases %>%
   mutate(cnvID = map$V2[match(V1, map$V1)],
@@ -39,6 +41,7 @@ cases2 <- cases %>%
   filter(passed == 1) %>%
   select(V1, cnvID)
 write.table(cases2, "/QRISdata/Q4399/Anorexia/UKB/sample_selection/case_ids.txt", col.names = FALSE, row.names = FALSE, quote = FALSE, sep = "\t")
+
 ## controls (385,930 people)
 controls2 <- controls %>%
   mutate(cnvID = map$V2[match(V1, map$V1)],
@@ -49,9 +52,11 @@ write.table(controls2, "/QRISdata/Q4399/Anorexia/UKB/sample_selection/controls_i
 
 
 # Extract UKB phenotypes (Age, sex, SNP array) for AN cases and controls======================================
-#21003: Age when attended assessment centre
-#31:    Sex 0 = female, 1 = male
-#22000: Genotype measurement batch
+
+# 21003: Age when attended assessment centre
+# 31:    Sex 0 = female, 1 = male
+# 22000: Genotype measurement batch
+
 pheno <- read.csv("/QRISdata/Q2909/pheno/RAP/Cognitive_120122.csv")
 pheno2 <- pheno %>%
   select(f.eid = eid, Age = X21003.0.0, Sex = X31.0.0, Array = X22000.0.0) %>%
@@ -66,6 +71,7 @@ write.table(pheno3, "/QRISdata/Q4399/Anorexia/UKB/pheno/All_pheno_for_UKBB_filte
 
 
 # Filter individual UKB CNV calls to exclude the CNVs from samples that failed QC and remove CNVs with < 10 probes, confidence score < 10=====
+
 # 1,930,027 CNV calls
 cnvs <- read.table("/QRISdata/Q2909/pheno/RunID_670814_CNV/Files_for_Retman/All_CNVs_for_UKBB.dat", header = TRUE, fill = TRUE)
 cnvs_filtered <- cnvs %>%
@@ -76,11 +82,11 @@ write.table(cnvs_filtered, "/QRISdata/Q4399/Anorexia/UKB/cnv_data/All_CNVs_for_U
 
 
 # Create plink cnv cfiles (.fam and .cnv)=====================================================================================
+
 pheno <- read.table("/QRISdata/Q4399/Anorexia/UKB/pheno/All_pheno_for_UKBB_filtered.dat", header=TRUE)
 cnvs <- read.table("/QRISdata/Q4399/Anorexia/UKB/cnv_data/All_CNVs_for_UKBB_filtered.dat", header=TRUE,fill=TRUE)
 # Merge datasets
 cnvs_pheno <- left_join(pheno, cnvs, by = c("cnvID" = "f.eid"))
-
 
 # .cnv file==================================================
 #FID     Family ID

@@ -1,12 +1,14 @@
 
 
-#================= This script evaluates total rare CNV burden ===========================================================
+#================= This script evaluates total rare CNV burden in AN ====================================================
 
-#=============set up CNV burden function, file paths, and read in phenotypic data for covariates========================
+#============= Load CNV burden function, file paths, and read in phenotypic data for covariates ========================
 
+# Load required R libraries
 library(dplyr)
 library(data.table)
 
+# File paths and burden function
 wkdir="/QRISdata/Q4399/Anorexia/UKB/burden_analysis/overall_burden" ## path to conduct total CNV burden analyses in.
 cnv_path="/QRISdata/Q4399/Anorexia/UKB/rare_cnvs" ## path to rare CNV files
 pheno_path <- "/QRISdata/Q4399/Anorexia/UKB/pheno/All_pheno_for_UKBB_filtered.dat" ## path to phenotype file for covariates
@@ -23,6 +25,7 @@ process_data <- function(wkdir, cnv_type, test_type, pheno) {
     cnv <- read.table(paste0(cnv_path, "/UKBB_CNVs_for_AN_hg38.", cnv_type[i], ".cnv"), header = TRUE)
     
     if (test_type == "Length") {
+      # CNV length burden
       cnv$length <- as.numeric(cnv$BP2 - cnv$BP1)
       sum <- cnv %>% select(IID, length) %>% group_by(IID) %>% summarise(TotalLength=sum(length)) %>% as.data.frame()
       max <- signif(max(sum$TotalLength, na.rm=TRUE), 3)
@@ -32,27 +35,36 @@ process_data <- function(wkdir, cnv_type, test_type, pheno) {
       pheno$Length <- sum$length_grouping[match(pheno$V1, sum$IID)]
       pheno$Length <- as.numeric(pheno$Length)
       pheno$Length <- ifelse(is.na(pheno$Length), 0, pheno$Length)
+      
     } else if (test_type == "Count") {
+      # CNV count burden 
       cnv_counts <- cnv %>% group_by(FID) %>% count() %>% as.data.frame()
       pheno$Count <- cnv_counts$n[match(pheno$V1, cnv_counts$FID)]
       pheno$Count <- ifelse(is.na(pheno$Count), 0, pheno$Count)
+      
     } else if (test_type == "zooConsAm") {
+      # All mammalian constraint
       cnv_info <- fread(paste0(cnv_path, "/UKBB_CNVs_for_AN_hg38.ALL.info"))
       cnv <- cnv %>% mutate(tmp = row_number())
       cnv_info <- merge(cnv, cnv_info, by = "tmp")
       avg <- cnv_info %>% select(IID, zooConsAm) %>% group_by(IID) %>% summarise(avg=mean(zooConsAm)) %>% as.data.frame()
       pheno$zooConsAm <- avg$avg[match(pheno$V1, avg$IID)]
       pheno$zooConsAm <- ifelse(is.na(pheno$zooConsAm), 0, pheno$zooConsAm)
+      
     } else if (test_type == "zooConsPr") {
+      # Primate constraint
       cnv_info <- fread(paste0(cnv_path, "/UKBB_CNVs_for_AN_hg38.ALL.info"))
       cnv <- cnv %>% mutate(tmp = row_number())
       cnv_info <- merge(cnv, cnv_info, by = "tmp")
       avg <- cnv_info %>% select(IID, zooConsPr) %>% group_by(IID) %>% summarise(avg=mean(zooConsPr)) %>% as.data.frame()
       pheno$zooConsPr <- avg$avg[match(pheno$V1, avg$IID)]
       pheno$zooConsPr <- ifelse(is.na(pheno$zooConsPr), 0, pheno$zooConsPr)
+      
     } else if (test_type == "dosage_sensitive") {
+      # Dosage-sensitive constraint
       cnv <- read.table(paste0(cnv_path, "/UKBB_CNVs_for_AN_hg38.", cnv_type[i], ".sensitive.cnv"), header = TRUE)
       pheno$dosage_sensitive <- ifelse(pheno$V1 %in% cnv$FID, 1, 0)
+      
     }
     vec <- calculate_burden(cnv, pheno, test_type, cnv_type[i])
     res[[i]] <- vec
@@ -81,10 +93,8 @@ write.table(all_results, paste(wkdir, "UKBB_overall_burden_results.csv", sep = "
 
 #===============rare CNV burden across length and CNV type (all, del, dup)=====================================
 
-
 lengths <- c("all", "first", "second", "third", "fourth")
 svtype <- c("DEL", "DUP", "ALL")
-
 
 ## burden associations
 length_list <- list()

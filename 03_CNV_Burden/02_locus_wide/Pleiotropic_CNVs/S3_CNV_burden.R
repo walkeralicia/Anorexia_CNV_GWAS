@@ -1,13 +1,13 @@
 
-#======This script calculates the burden of pleiotropic CNVs within Anorexia patients==================================
+#====== This script calculates the burden of pleiotropic CNVs within AN ===========================================================
 
-# load required R libraries
+# Road required R libraries
 library(dplyr)
 library(logistf)
 library(data.table)
 options(scipen=999)
 
-# read in files ==================
+# Read in files ==================
 pheno_path <- "/QRISdata/Q4399/Anorexia/UKB/pheno/All_pheno_for_UKBB_filtered.dat" ## path to phenotype file for covariates
 fam <- read.table(pheno_path, header=T)
 file_name <- "UKBB_CNVs_for_AN_hg38"
@@ -25,7 +25,7 @@ logistic <- vector("list", length(cnvs))
 unadjusted_logistic <- vector("list", length(cnvs))
 names <- c("Index", "Method", "Case_N", "Cont_N", "Cont_SE", "Cont_Freq_per10K", "Cont_CI", "OR", "CI", "Pvalue", "beta", "se")
 
-# begin CNV burden analyses ========================
+# Begin CNV burden analyses ========================
 for (i in 1:length(cnvs)){
   print(i)
   index <- cnvs[i]

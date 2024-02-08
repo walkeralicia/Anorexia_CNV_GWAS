@@ -1,6 +1,6 @@
 
 
-#=========== This script annotates rare CNVs for total burden analyses within the UKB============================================
+#======== This script annotates rare CNVs to dosage-sensitive genes and to mammalian constraint measures ===============================
 
 # load R packages
 library(dplyr)
@@ -11,11 +11,11 @@ library(rstatix)
 library(stringr)
 library(ggplot2)
 
-#==== First extract collins et al. dosage sensitive genes ===========================
-
+#======== Extract collins et al. dosage sensitive genes ===========================
+# File path
 path_drCNVs="/QRISdata/Q4399/Anorexia/UKB/burden_analysis/drCNVs" ## path to file with disease-risk dosage-sensitive CNVs from Collins et al.
 
-
+# Reformat list of genes, split by CNV type (i.e., triplosensitive (dups) and haploinsufficient (dels))
 collins <- read.table(paste(path_drCNVs,"collins2022-TableS7-pHaplo-pTriplo.tsv", sep="/"), header=TRUE)
 genes <- read.table(paste0(path_drCNVs, "/geneMatrix.tsv"), header=TRUE, fill=TRUE)
 genes2 <- genes[, c("ensgid", "hg38h0", "h1","h2")]
@@ -30,13 +30,14 @@ write.table(triplo2, paste(path_drCNVs,"triplosensitive_list.txt", sep="/"), row
 write.table(haplo2, paste(path_drCNVs,"haploinsufficient_list.txt", sep="/"), row.names=F, col.names=F, quote=F, sep="\t")
 
 
-#============ annotate rare UKB CNVs with disease-risk Collins dosage-sensitive genes ==================================
-
+#============ Annotate rare UKB CNVs with disease-risk Collins dosage-sensitive genes ==================================
+# File paths
 p <- "/QRISdata/Q4399/software/plink-1.07-x86_64/plink"
 wkdir <- "/QRISdata/Q4399/Anorexia/UKB/rare_cnvs"
 drCNVS <- "/QRISdata/Q4399/Anorexia/UKB/burden_analysis/drCNVs"
 file_name <- "UKBB_CNVs_for_AN_hg38"
 
+# Intersections
 system(paste(p, "--noweb --cfile", paste(wkdir, paste0(file_name, ".DUP"), sep = "/"), "--cnv-intersect", paste(drCNVS, "triplosensitive_list.txt", sep = "/"), "--cnv-write", "--out", paste(wkdir, paste0(file_name, ".DUP.sensitive"), sep = "/")))
 
 system(paste(p, "--noweb --cfile", paste(wkdir, paste0(file_name, ".DUP.sensitive"), sep = "/"), "--cnv-make-map", "--out", paste(wkdir, paste0(file_name, ".DUP.sensitive"), sep = "/")))
@@ -46,9 +47,8 @@ system(paste(p, "--noweb --cfile", paste(wkdir, paste0(file_name, ".DEL"), sep =
 system(paste(p, "--noweb --cfile", paste(wkdir, paste0(file_name, ".DEL.sensitive"), sep = "/"), "--cnv-make-map", "--out", paste(wkdir, paste0(file_name, ".DEL.sensitive"), sep = "/")))
 
 
-
-#================ Annotating rare CNVs with mammalian constraint (1K bins from Pat Sullivan)======================
-
+#================ Annotate rare CNVs with mammalian constraint (1K bins from Pat Sullivan)======================
+# File path
 wkdir="/QRISdata/Q4399/Anorexia/UKB/rare_cnvs" ## path to conduct total CNV burden analyses in.
 
 a <- fread(paste(wkdir, "UKBB_CNVs_for_AN_hg38.ALL.cnv", sep="/")) %>% 

@@ -1,17 +1,17 @@
 #!/bin/bash
 
-# This script creates plink .map cfile, performs hg19 to hg39 genomic cordinate liftover, 
-# and generates a corresponding set of cfiles with BMI as the UKB phenotypic outcome
+# This script creates plink .map cfile, performs hg19 to hg38 genomic co-ordinate liftover, 
+# and generates an additional set of cfiles with BMI as the UKB phenotypic outcome
 
 #============ create plink .map file for cfile data  (PLINK V1.07)===================================
+# File paths
 p="/QRISdata/Q4399/software/plink-1.07-x86_64/plink"
 cfile="/QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN"
 
 ${p} --noweb --cfile ${cfile} --cnv-make-map --out ${cfile}
 
 
-
-#=============== hg19tohg38 liftover ===============================================================
+#=============== hg19 to hg38 liftover ===============================================================
 # File paths
 cfile="/QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN"
 liftOver="/QRISdata/Q4399/software/liftOver"
@@ -54,21 +54,26 @@ bmi_file="/QRISdata/Q2909/pheno/RAP/OP_year_080623_participant.csv"
 map_file="/QRISdata/Q2909/pheno/RunID_670814_CNV/ukb12505bridge14421.txt"
 output_file="/QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38_BMI"
 
-
 # Step 1: Extract relevant columns from the fam file
 awk '{print $2, $3, $4, $5, $6}' "${cfile}.fam" > "${cfile}.temp.fam"
+
 # Step 2: Extract relevant columns from the map file
 awk '{print $1, $2}' "${map_file}" > "${output_file}.temp.map"
+
 # Step 3: Extract relevant columns from the BMI file
 awk -F',' 'NR>1{print $1, $2}' "${bmi_file}" > "${output_file}.temp.bmi"
+
 # Step 4: Join the temp.map and temp.bmi files based on the first column
 awk 'NR==FNR{a[$1]=$2; next} {print $1, $2, a[$1]}' "${output_file}.temp.bmi" "${output_file}.temp.map" > "${output_file}.temp.join1"
+
 # Step 5: Join the temp.join1 and temp.fam file
 awk 'NR==FNR{a[$1]=$3; next} {print $1, $1, $2, $3, $4, a[$1]}' "${output_file}.temp.join1" "${cfile}.temp.fam" > "${output_file}.temp.fam.join1"
+
 # Clean up temporary files
 rm "${cfile}.temp.fam" "${output_file}.temp.map" "${output_file}.temp.bmi" "${output_file}.temp.join1"
 mv "${output_file}.temp.fam.join1" ${output_file}_temp.fam
-## replace empty cells for BMI with -9
+
+# replace empty cells for BMI with -9
 awk -v OFS="\t" '{if ($6=="") $6=-9; print}' ${output_file}_temp.fam > ${output_file}.fam
 
 # create plink cfiles (.cnv and .map for BMI outcome)
