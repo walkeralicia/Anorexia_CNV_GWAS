@@ -1,6 +1,6 @@
 ﻿# Genome-wide CNV Association Study
 
- This Github contains the workflow pipeline to conduct a Genome Wide Copy Number Variant (CNV) association study within the UK Biobank (UKB) using Anorexia Nervosa (AN) and Body Mass Index (BMI) as the outcomes. The pipeline also includes scripts to meta-anlyses UKB summary statistics with the Anorexia Nervosa Genetics Initiative (ANGI) study using Stouffer's method. 
+ This Github contains the workflow pipeline to conduct a rare Copy Number Variant (CNV) genome-wide association study (rCNV-GWAS) within the UK Biobank (UKB) using Anorexia Nervosa (AN) and Body Mass Index (BMI) as the outcomes. The pipeline also meta-analyses UKB summary statistics with the Anorexia Nervosa Genetics Initiative (ANGI) study using Stouffer's method. 
 
  # Citations
 
@@ -8,33 +8,33 @@
 
  # Pipeline
 
- Folders **/01_Samples** and **/02_CNVs** describe AN phenotype extraction and CNV-level QC specific to acquired input data from the UKB. All subsequent folders describe a general CNV-burden workflow pipeline that can be applied on any CNV input data that is in the required PLINK cfile format (i.e., .cnv, .fam, .map).
+ Folders **/01_Samples** and **/02_CNVs** describe AN phenotype extraction and CNV-level QC specific to acquired UKB input data. All downstream folders describe a general CNV-burden workflow pipeline that can be applied on any CNV data that is in PLINK cfile format (i.e., .cnv, .fam, .map).
 
  Folders with scripts:
 
 -  **/01_Samples** extracts the UKB Anorexia Nervosa (AN) phenotypes.
 
-- **/02_CNVs** processes the acquired UKB CNV calls into PLINK cfile format (i.e., .cnv, .map, .fam files).
+- **/02_CNVs** processes the acquired UKB CNV calls into PLINK cfile format.
 
-- **/03_CNV_Burden** extracts rare (<1% population frequency) CNVs and contains subfolders:
+- **/03_CNV_Burden** extracts rare (<1% population frequency) CNVs (rCNVs) and contains subfolders:
 
      **/genome_wide** to conduct various total genome-wide rCNV burden analyses.
    
-     **/locus_wide** to conduct multiple locus-wide CNV associations using two sets of CNV lists; a set of 167 dosage-sensitive, pleiotropic CNVs, and a set of 67 well-established syndromic CNVs (including DECIPHER developmental CNVs).
+     **/locus_wide** to conduct multiple locus-wide rCNV associations using two sets of CNV lists; a set of 167 dosage-sensitive, pleiotropic CNVs, and a set of 67 well-established syndromic CNVs.
 
-- **/04_CNV_breakpoint_GWAS** converts cnv input data from PLINK cfile format into PLINK bfile format to conduct a genome-wide CNV breakpoint association study.
+- **/04_CNV_breakpoint_GWAS** converts cnv input data from PLINK cfile format into PLINK bfile format to then conduct a genome-wide rCNV breakpoint association study.
 
 - **/05_Novel_CNV_regions** identifies novel disease-risk CNV regions (CNVRs) and plots the results.
 
-- **/06_Meta_analyses_with_ANGI** meta-analyses locus-wide and CNV-breakpoint GWAS association results with a replication study's results using Stouffer's method. The subfolder **/data** contains the summary statistics from the ANGI study used to meta-analyse with the UKB.
+- **/06_Meta_analyses_with_ANGI** meta-analyses locus-wide and rCNV-breakpoint GWAS association results with a replication study's results using Stouffer's method. The subfolder **/ANGI_data** contains ANGI summary statistics used in the study to meta-analyse with the UKB.
 
  # CNV Input Data
 
- In this Study, CNV input data comes from the acquired CNVs called on autosomes within the UKB by Kendal et al.  All UKB samples were genotyped using two Affymetrix arrays (UK BiLEVE and UK Biobank Axiom arrays), each containing over 800,000 probes. Kendal et al. used PennCNV to identify all CNVs that spanned at least 10 probes and were longer than 20 kb. 
- 
+ In this study, UKB CNV input data comes from the acquired CNVs called on autosomes by Kendal et al.  All UKB samples were genotyped using two Affymetrix arrays (UK BiLEVE and UK Biobank Axiom arrays), each containing over 800,000 probes. Kendal et al. used PennCNV to identify all CNVs that spanned at least 10 probes and were longer than 20 kb. 
+
 # CNV Annotation Input data
 
-CNV annotation files come from various public databases and published research papers, and have been placed in the folder **/data**. When using this data, please cite the sources appropriately. 
+CNV annotation files come from various public databases and published research papers. All files and corresponding README files have been placed in the folder **/data**. When using this data, please cite the sources appropriately. 
 
 1. **Syndromic CNV List**
 2. **Dosage-sensitive CNV List**
