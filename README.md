@@ -1,6 +1,6 @@
 ﻿# Genome-wide CNV Association Study
 
- This Github contains the workflow pipeline to conduct a Genome Wide Copy Number Variant (CNV) association study within the UK Biobank (UKB) using Anorexia Nervosa (AN) and Body Mass Index (BMI) as the outcomes.
+ This Github contains the workflow pipeline to conduct a Genome Wide Copy Number Variant (CNV) association study within the UK Biobank (UKB) using Anorexia Nervosa (AN) and Body Mass Index (BMI) as the outcomes. The pipeline also includes scripts to meta-anlyses UKB summary statistics with the Anorexia Nervosa Genetics Initiative (ANGI) study using Stouffer's method. 
 
  # Citations
 
@@ -26,7 +26,7 @@
 
 - **/05_Novel_CNV_regions** identifies novel disease-risk CNV regions (CNVRs) and plots the results.
 
-- **/06_Meta_analyses_with_ANGI** meta-analyses locus-wide and CNV-breakpoint GWAS association results with a replication study's results using Stouffer's method. The folder also contains the summary statistics from the ANGI study used to meta-analyse with the UKB.
+- **/06_Meta_analyses_with_ANGI** meta-analyses locus-wide and CNV-breakpoint GWAS association results with a replication study's results using Stouffer's method. The subfolder **/data** contains the summary statistics from the ANGI study used to meta-analyse with the UKB.
 
  # CNV Input Data
 
