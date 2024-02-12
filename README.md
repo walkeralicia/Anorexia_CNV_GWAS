@@ -14,13 +14,13 @@
 
 -  **/01_Samples** extracts the UKB Anorexia Nervosa (AN) phenotypes.
 
-- **/02_CNVs** processes the acquired UKB CNV calls into PLINK cfile format (i.e., .cnv, .map, .fam files) for further CNV burden analyses.
+- **/02_CNVs** processes the acquired UKB CNV calls into PLINK cfile format (i.e., .cnv, .map, .fam files).
 
 - **/03_CNV_Burden** extracts rare (<1% population frequency) CNVs and contains subfolders:
 
      **/genome_wide** to conduct various total genome-wide rCNV burden analyses.
    
-     **/locus_wide** to conduct multiple locus-wide CNV associations using two sets of known CNV lists; a set of 167 dosage-sensitive, pleiotropic CNVs, and a set of 67 well-established syndromic CNVs (including DECIPHER developmental CNVs).
+     **/locus_wide** to conduct multiple locus-wide CNV associations using two sets of CNV lists; a set of 167 dosage-sensitive, pleiotropic CNVs, and a set of 67 well-established syndromic CNVs (including DECIPHER developmental CNVs).
 
 - **/04_CNV_breakpoint_GWAS** converts cnv input data from PLINK cfile format into PLINK bfile format to conduct a genome-wide CNV breakpoint association study.
 
