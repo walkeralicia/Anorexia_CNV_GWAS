@@ -18,13 +18,13 @@
 
 - **/03_CNV_Burden** extracts rare (<1% population frequency) CNVs and contains subfolders:
 
-   a. **/01_genome_wide** to conduct various total genome-wide rCNV burden analyses.
+     **/genome_wide** to conduct various total genome-wide rCNV burden analyses.
    
-   b. **/02_locus_wide** to conduct multiple locus-wide CNV associations using two sets of known CNV lists; a set of 167 pleiotropic dosage-sensitive disease-risk CNVs, and a set of XX DECIPHER genomic syndrome CNVs.
+     **/locus_wide** to conduct multiple locus-wide CNV associations using two sets of known CNV lists; a set of 167 pleiotropic dosage-sensitive disease-risk CNVs, and a set of XX DECIPHER genomic syndrome CNVs.
 
-- **/04_CNV_breakpoint_GWAS** converts cnv input data from PLINK cfile format into PLINK bfile format. Downstream scripts ...
+- **/04_CNV_breakpoint_GWAS** converts cnv input data from PLINK cfile format into PLINK bfile format to conduct a genome-wide CNV breakpoint association study.
 
-- **/05_novel_CNV_regions** identifies novel disease-associated CNV regions (CNVRs) and plots these CNVRs with genomic annotations.
+- **/05_novel_CNV_regions** identifies novel disease-associated CNV regions (CNVRs) and plots the results.
 
 - **/06_Meta_analyses_with_ANGI** meta-analyses locus-wide and CNV-breakpoint GWAS association results with a replication study's results using Stouffer's method. The folder also contains the summary statistics from the ANGI study used to meta-analyse with the UKB.
 
@@ -34,7 +34,7 @@
  
 # CNV Annotation Input data
 
-CNV annotation files come from various public databases and published research papers, and have been placed in the folder /data. When using this data, please cite the sources appropriately. 
+CNV annotation files come from various public databases and published research papers, and have been placed in the folder **/data**. When using this data, please cite the sources appropriately. 
 
 1. Developmental CNV List
 2. Pleiotropic Disease-risk dosage-sensitive CNV List
