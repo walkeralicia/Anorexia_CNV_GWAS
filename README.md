@@ -20,11 +20,11 @@
 
      **/genome_wide** to conduct various total genome-wide rCNV burden analyses.
    
-     **/locus_wide** to conduct multiple locus-wide CNV associations using two sets of known CNV lists; a set of 167 pleiotropic dosage-sensitive disease-risk CNVs, and a set of XX DECIPHER genomic syndrome CNVs.
+     **/locus_wide** to conduct multiple locus-wide CNV associations using two sets of known CNV lists; a set of 167 dosage-sensitive, pleiotropic CNVs, and a set of 67 well-established syndromic CNVs (including DECIPHER developmental CNVs).
 
 - **/04_CNV_breakpoint_GWAS** converts cnv input data from PLINK cfile format into PLINK bfile format to conduct a genome-wide CNV breakpoint association study.
 
-- **/05_novel_CNV_regions** identifies novel disease-associated CNV regions (CNVRs) and plots the results.
+- **/05_Novel_CNV_regions** identifies novel disease-risk CNV regions (CNVRs) and plots the results.
 
 - **/06_Meta_analyses_with_ANGI** meta-analyses locus-wide and CNV-breakpoint GWAS association results with a replication study's results using Stouffer's method. The folder also contains the summary statistics from the ANGI study used to meta-analyse with the UKB.
 
@@ -36,10 +36,10 @@
 
 CNV annotation files come from various public databases and published research papers, and have been placed in the folder **/data**. When using this data, please cite the sources appropriately. 
 
-1. Developmental CNV List
-2. Pleiotropic Disease-risk dosage-sensitive CNV List
-3. Zoonomia scores
-4. Gene annotations
+1. **Syndromic CNV List**
+2. **Dosage-sensitive CNV List**
+3. **Zoonomia scores**
+4. **Gene annotation Files**
 
 
  
