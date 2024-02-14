@@ -1,6 +1,6 @@
 ﻿# CNV Genome-wide Association Study
 
- This Github contains a workflow pipeline to conduct a rare copy number variant genome wide association study (CNV-GWAS) and accompanies the article "Genome-wide CNV-association study in 8,674 individuals with anorexia nervosa". 
+ This Github contains a workflow pipeline to conduct a copy number variant genome wide association study (CNV-GWAS) and accompanies the article "Genome-wide CNV-association study in 8,674 individuals with anorexia nervosa". 
 
  # Citations
 
@@ -8,8 +8,8 @@ If you use scripts from this Github please cite the article: ref (TBC).
 
  # CNV Input Data
 
- In this pipeline, CNV input data is acquired from the UK Biobank (UKB) called by Kendal et al. and results are meta-analysed with summary statistics from the Anorexia Nervosa Genetics Initiaitve (ANGI) study using Stouffer's method. 
-
+ In this pipeline, CNV input data is acquired from the UK Biobank (UKB) called by Kendal et al. Due to privacy restrictions, UKB CNV-GWAS results are meta-analysed with summary statistics from the Anorexia Nervosa Genetics Initiaitve (ANGI) study using Stouffer's method. 
+ 
  # Pipeline
 
 Folders **/01_Samples** and **/02_CNVs** describe AN phenotype extraction and CNV-level quality-control specific to acquired UKB input data. 
@@ -22,17 +22,17 @@ All downstream folders describe a general CNV-burden pipeline that can be applie
 
 - **/02_CNVs** processes the acquired UKB CNV calls into PLINK cfile format.
 
-- **/03_CNV_Burden** extracts rare (<1% population frequency) CNVs (rCNVs) and contains subfolders:
+- **/03_CNV_Burden** extracts rare (<1% population frequency) CNVs and contains subfolders:
 
-     **/genome_wide** to conduct various total genome-wide rCNV burden analyses.
+     **/genome_wide** to conduct various total genome-wide CNV burden analyses.
    
-     **/locus_wide** to conduct multiple locus-wide rCNV associations using two sets of CNV lists; a set of 167 dosage-sensitive, pleiotropic CNVs, and a set of 67 well-established syndromic CNVs.
+     **/locus_wide** to conduct multiple locus-wide CNV associations using two sets of CNV lists; a set of 167 dosage-sensitive, pleiotropic CNVs, and a set of 67 well-established syndromic CNVs.
 
-- **/04_CNV_breakpoint_GWAS** converts cnv input data from PLINK cfile format into PLINK bfile format to then conduct a rCNV breakpoint genome-wide association study (rCNV-GWAS).
+- **/04_CNV_breakpoint_GWAS** converts CNV input data from PLINK cfile format into PLINK bfile format to then conduct a CNV-GWAS.
 
 - **/05_Novel_CNV_regions** identifies novel disease-risk CNV regions (CNVRs) and plots the results.
 
-- **/06_Meta_analyses_with_ANGI** meta-analyses locus-wide and rCNV-breakpoint GWAS association results with a replication study's results using Stouffer's method. The subfolder **/ANGI_data** contains ANGI summary statistics used in the study to meta-analyse with the UKB.
+- **/06_Meta_analyses_with_ANGI** meta-analyses locus-wide and CNV-GWAS results with a replication study's results using Stouffer's method. The subfolder **/ANGI_data** contains ANGI summary statistics used in the study to meta-analyse with the UKB.
 
 # CNV Annotation Input Data
 
