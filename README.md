@@ -1,14 +1,20 @@
-﻿# Genome-wide CNV Association Study
+﻿# CNV Genome-wide Association Study
 
- This Github contains the workflow pipeline to conduct a rare Copy Number Variant (rCNV) genome-wide association study (GWAS) within the UK Biobank (UKB) using Anorexia Nervosa (AN) and Body Mass Index (BMI) as the outcomes. The pipeline also meta-analyses UKB summary statistics with the Anorexia Nervosa Genetics Initiative (ANGI) study using Stouffer's method. 
+ This Github contains a workflow pipeline to conduct a rare copy number variant genome wide association study (CNV-GWAS) and accompanies the article "Genome-wide CNV-association study in 8,674 individuals with anorexia nervosa". 
 
  # Citations
 
- If you use scripts from this Github please consider citing the article: 
+If you use scripts from this Github please cite the article: ref (TBC). 
+
+ # CNV Input Data
+
+ In this pipeline, CNV input data is acquired from the UK Biobank (UKB) called by Kendal et al. and results are meta-analysed with summary statistics from the Anorexia Nervosa Genetics Initiaitve (ANGI) study using Stouffer's method. 
 
  # Pipeline
 
- Folders **/01_Samples** and **/02_CNVs** describe AN phenotype extraction and CNV-level quality-control specific to acquired UKB input data. All downstream folders describe a general CNV-burden workflow pipeline that can be applied on any CNV data that is in PLINK cfile format (i.e., .cnv, .fam, .map).
+Folders **/01_Samples** and **/02_CNVs** describe AN phenotype extraction and CNV-level quality-control specific to acquired UKB input data. 
+
+All downstream folders describe a general CNV-burden pipeline that can be applied on any CNV data that is in PLINK cfile format (i.e., .cnv, .fam, .map) and on any set of covariates (e.g., PCs, Sex, Age, Array type, etc.). 
 
  Folders with scripts:
 
@@ -27,10 +33,6 @@
 - **/05_Novel_CNV_regions** identifies novel disease-risk CNV regions (CNVRs) and plots the results.
 
 - **/06_Meta_analyses_with_ANGI** meta-analyses locus-wide and rCNV-breakpoint GWAS association results with a replication study's results using Stouffer's method. The subfolder **/ANGI_data** contains ANGI summary statistics used in the study to meta-analyse with the UKB.
-
- # CNV Input Data
-
- In this study, UKB CNV input data comes from the acquired CNVs called on autosomes by Kendal et al.  All UKB samples were genotyped using two Affymetrix arrays (UK BiLEVE and UK Biobank Axiom arrays), each containing over 800,000 probes. Kendal et al. used PennCNV to identify all CNVs that spanned at least 10 probes and were longer than 20 kb. 
 
 # CNV Annotation Input Data
 
