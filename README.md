@@ -18,7 +18,7 @@ All downstream folders describe a general CNV-burden pipeline that can be applie
 
  Folders with scripts:
 
--  **/01_Samples** extracts the UKB Anorexia Nervosa (AN) phenotypes.
+-  **/01_Samples** extracts the UKB AN phenotypes.
 
 - **/02_CNVs** processes the acquired UKB CNV calls into PLINK cfile format.
 
