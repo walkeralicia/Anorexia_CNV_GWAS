@@ -28,7 +28,7 @@ All downstream folders describe a general CNV-burden pipeline that can be applie
    
      **/locus_wide** to conduct multiple locus-wide CNV associations using two sets of CNV lists; a set of 167 dosage-sensitive, pleiotropic CNVs, and a set of 67 well-established syndromic CNVs.
 
-- **/04_CNV_breakpoint_GWAS** converts CNV input data from PLINK cfile format into PLINK bfile format to then conduct a CNV-GWAS.
+- **/04_CNV_breakpoint_GWAS** converts CNV breakpoint input data from PLINK cfile format into PLINK bfile format to then conduct a CNV-GWAS.
 
 - **/05_Novel_CNV_regions** identifies novel disease-risk CNV regions (CNVRs) and plots the results.
 
