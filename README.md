@@ -26,7 +26,7 @@ All downstream folders describe a general CNV-burden pipeline that can be applie
 
      **/genome_wide** to conduct various total genome-wide CNV burden analyses.
    
-     **/locus_wide** to conduct multiple locus-wide CNV associations using two sets of CNV lists; a set of 167 dosage-sensitive, pleiotropic CNVs, and a set of 67 well-established syndromic CNVs.
+     **/locus_wide** to conduct multiple locus-wide CNV burden analyses using two sets of CNV lists; a set of 167 dosage-sensitive pleiotropic CNVs; and a set of 67 well-established syndromic CNVs.
 
 - **/04_CNV_breakpoint_GWAS** converts CNV breakpoint input data from PLINK cfile format into PLINK bfile format to then conduct a CNV-GWAS.
 
