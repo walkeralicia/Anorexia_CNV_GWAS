@@ -3,7 +3,8 @@
 
 #======= This script combines all chromosome-wide bfiles into a genome-wide bfile split by CNV type (deletions and duplications) =============
 
-p="/QRISdata/Q4399/software/plink"
+p="plink"
+path="/Anorexia/UKB/plink_files"
 outdir="${path}/bfiles"
 
 for i in {1..22}; do

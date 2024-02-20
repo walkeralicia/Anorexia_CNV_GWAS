@@ -4,9 +4,10 @@
 #========== R script (cnv_to_plink_chrCHROMOSOME_batchBATCH.R)=======================
 
 ### READ IN DATA  
-path<-"/QRISdata/Q4399/Anorexia/UKB/plink_files" # set your path to plink cfiles here
-cnvs <- read.table(paste(path, "UKBB_CNVs_for_AN_hg38.cnv", sep="/"), header=TRUE)
-fam <- read.table(paste(path, "UKBB_CNVs_for_AN_hg38.fam", sep="/"), header=FALSE)
+path<-"/Anorexia/UKB/plink_files" # set your path to plink cfiles here
+cfile<-"UKBB_CNVs_for_AN_hg38"
+cnvs <- read.table(paste0(path, "/", cfile, ".cnv", sep="/"), header=TRUE)
+fam <- read.table(paste0(path, "/", cfile, ".fam", sep="/"), header=FALSE)
 num<-signif(nrow(fam),3)/1000
 
 ## Read in required r packages
@@ -96,7 +97,7 @@ plink_ped_batch_v2_del <- plink_ped_batch_del[, c(colnames(plink_ped_batch_del)[
 plink_ped_batch_v2_del <- cbind(plink_ped_batch_v2_del[,1:6], as.data.frame(unlist(lapply(plink_ped_batch_v2_del[, c(7:ncol(plink_ped_batch_v2_del))], data.table::tstrsplit, " "), recursive = FALSE)))
 fwrite(plink_ped_batch_v2_del, paste(path, "cnv_to_PLINK_DEL_chrCHROMOSOME_batchBATCH.ped", sep="/"), col.names = F, row.names = F, quote = F, sep = "\t")
 
-system("path=/QRISdata/Q4399/Anorexia/UKB/plink_files")
+system("path=/Anorexia/UKB/plink_files")
 system("mkdir -p ${path}/bfiles")
 system("plink --noweb --file ${path}/cnv_to_PLINK_DUP_chrCHROMOSOME_batchBATCH --make-bed --out ${path}/bfiles/cnv_to_PLINK_DUP_chrCHROMOSOME_batchBATCH")
 system("rm ${path}/cnv_to_PLINK_DUP_chrCHROMOSOME_batchBATCH.map")

@@ -10,17 +10,18 @@ library(egg)
 library(ggrepel)
 
 #========= Read in SAIGE results for CNV breakpoints of any frequency============================
-input <- "/QRISdata/Q4399/Anorexia/UKB/burden_analysis/SAIGE/step2"
-output <- "/QRISdata/Q4399/Anorexia/UKB/burden_analysis/SAIGE/plots"
+input <- "/Anorexia/UKB/burden_analysis/SAIGE/step2"
+output <- "/Anorexia/UKB/burden_analysis/SAIGE/plots"
 dels <- read.table(paste(input, "DEL_SAIGE_step2_AN.txt", sep="/"), header=T)
 dups <- read.table(paste(input, "DUP_SAIGE_step2_AN.txt", sep="/"), header=T)
 
 #======= Read in Genomic cytoband information===============================================
-cytoband <- fread(paste(output, "cytoBand.txt", sep="/"), header=FALSE) %>% as.data.frame()
+data_path <- "data" ## path to folder with cytoBand.txt.
+cytoband <- fread(paste(data_path, "cytoBand.txt", sep="/"), header=FALSE) %>% as.data.frame()
 cytoband$CHR <- as.numeric(gsub("chr", "", cytoband$V1))
 
 #======= calculating cnv frequency using genotype counts ====================================
-fam <- read.table("/QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38.fam")
+fam <- read.table("/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38.fam")
 numpeople <- nrow(fam)
 dels2 <- dels %>% select(CHR, MarkerID, AC_Allele2, AF_Allele2)
 dups2 <- dups %>% select(CHR, MarkerID, AC_Allele2, AF_Allele2)
