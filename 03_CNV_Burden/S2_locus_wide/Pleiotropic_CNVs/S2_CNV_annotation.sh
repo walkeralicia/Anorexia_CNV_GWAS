@@ -7,9 +7,12 @@
 #PBS -l walltime=6:00:00
 #PBS -l select=1:ncpus=10:mem=100GB
 
-p="/QRISdata/Q4399/software/plink-1.07-x86_64/plink"
-WKDIR="/QRISdata/Q4399/Anorexia/UKB/burden_analysis/drCNVs"
-cnvdir="/QRISdata/Q4399/Anorexia/UKB/rare_cnvs"
+
+# Submit this bash script to annotate UKB rare CNVs to the pleiotropic disease-risk CNV regions.
+
+p="plink"
+WKDIR="/Anorexia/UKB/burden_analysis/drCNVs"
+cnvdir="/Anorexia/UKB/rare_cnvs"
 file_name="UKBB_CNVs_for_AN_hg38"
 
 # duplications ====================

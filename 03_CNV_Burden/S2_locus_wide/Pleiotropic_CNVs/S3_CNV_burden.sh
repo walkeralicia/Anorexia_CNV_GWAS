@@ -8,14 +8,12 @@
 #SBATCH --job-name=drCNVs
 #SBATCH --partition=general
 #SBATCH --account=a_mcrae
-#SBATCH -o /QRISdata/Q4399/Anorexia/UKB/burden_analysis/drCNVs/burden.stdout
-#SBATCH -e /QRISdata/Q4399/Anorexia/UKB/burden_analysis/drCNVs/burden.stderr
+#SBATCH -o /Anorexia/UKB/burden_analysis/drCNVs/burden.stdout
+#SBATCH -e /Anorexia/UKB/burden_analysis/drCNVs/burden.stderr
 
-
+# Submit this job script to run S3_CNV_burden.R
 
 module load r
-export R_LIBS=/home/uqawal15/R_libraries/rlib_4.2.1
+export R_LIBS=/rlib_4.2.1
 
-cd /QRISdata/Q4399/Anorexia/UKB/burden_analysis/drCNVs
-
-R --file=/QRISdata/Q4399/Anorexia/UKB/burden_analysis/drCNVs/S3_CNV_burden.R
+R --file=/Anorexia/UKB/burden_analysis/drCNVs/S3_CNV_burden.R

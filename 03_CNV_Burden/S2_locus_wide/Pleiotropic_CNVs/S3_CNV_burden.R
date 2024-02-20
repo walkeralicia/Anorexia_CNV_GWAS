@@ -1,18 +1,23 @@
 
-#====== This script calculates the burden of pleiotropic CNVs within AN ===========================================================
+#====== This script calculates the burden of pleiotropic CNVs ===========================================================
 
-# Road required R libraries
+#== Load required R libraries ==
 library(dplyr)
 library(logistf)
 library(data.table)
 options(scipen=999)
 
-# Read in files ==================
-pheno_path <- "/QRISdata/Q4399/Anorexia/UKB/pheno/All_pheno_for_UKBB_filtered.dat" ## path to phenotype file for covariates
-fam <- read.table(pheno_path, header=T)
-file_name <- "UKBB_CNVs_for_AN_hg38"
+#== Set up file paths ===
 
-drCNV_path <- "/QRISdata/Q4399/Anorexia/UKB/burden_analysis/drCNVs"
+pheno_path <- "/Anorexia/UKB/pheno/All_pheno_for_UKBB_filtered.dat" ## path to phenotype file for covariates
+file_name <- "UKBB_CNVs_for_AN_hg38" ## cfile name
+drCNV_path <- "/Anorexia/UKB/burden_analysis/drCNVs" ## path to conduct pleiotropic CNV burden analyses in.
+
+
+# Read in files ==================
+
+fam <- read.table(pheno_path, header=T)
+
 pos_dels <- read.table(paste(drCNV_path, "collins_dels.txt", sep="/"),header=FALSE)
 pos_dups <- read.table(paste(drCNV_path, "collins_dups.txt", sep="/"),header=FALSE)
 dels <- as.character(pos_dels$V4)
