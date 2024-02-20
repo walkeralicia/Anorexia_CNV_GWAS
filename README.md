@@ -32,7 +32,7 @@ All downstream folders describe a general CNV-burden pipeline that can be applie
 
 - **/05_Novel_CNV_regions** identifies novel disease-risk CNV regions (CNVRs) and plots the results.
 
-- **/06_Meta_analyses_with_ANGI** meta-analyses locus-wide and CNV-GWAS results with a replication study's results using Stouffer's method. The subfolder **/ANGI_data** contains ANGI summary statistics used in the study to meta-analyse with the UKB.
+- **/06_Meta_analyses** meta-analyses locus-wide and CNV-GWAS results with a replication study's results using Stouffer's method. The subfolder **/ANGI_data** contains ANGI summary statistics used in the study to meta-analyse with the UKB.
 
 # CNV Annotation Input Data
 
