@@ -1,15 +1,15 @@
 
+#==== This script creates plots of the novel AN-risk CNVRs with intersecting individual-level CNV tracks and gene track annotations ================
 
-
-#==== This script creates plots of the novel AN-risk CNVRs with intersecting individual-level CNV tracks and gene tracks underneath ================
-
-# Load R libraries ==============
+#== Load R libraries ==============
 library(data.table)
 library(dplyr)
 library(ggplot2)
 library(patchwork)
 library(ggrepel)
-wkdir="/QRISdata/Q4399/Anorexia/UKB/burden_analysis/SAIGE"
+
+#== Set up paths ==================
+wkdir="/Anorexia/UKB/burden_analysis/SAIGE" ## path to SAIGE result directory
 
 # Read in AN-risk CNVRs =====================
 cnvr <- read.csv(paste(wkdir, "CNVR/all_CNVR_risk_genes.csv", sep="/"), header=T)
@@ -56,7 +56,7 @@ for (i in 1:nrow(cnvrs)){
   cnvr_tmp <- c(c, start, end, "tmp")
   cnvr_tmp <- data.frame(t(unlist(cnvr_tmp)))
   fwrite(cnvr_tmp, "TMP1", col.names = F, sep = "\t")
-  system(paste("plink --noweb --cfile /QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38.DUP --cnv-intersect TMP1 --cnv-write --out TMP2"))
+  system(paste("plink --noweb --cfile /Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38.DUP --cnv-intersect TMP1 --cnv-write --out TMP2"))
   tracks <- fread("TMP2.cnv")
   fam <- fread("TMP2.fam")
   tracks$status <- fam$V6[match(tracks$FID, fam$V1)]
@@ -197,7 +197,7 @@ for (i in 1:nrow(cnvrs)){
   cnvr_tmp <- c(c, start, end, "tmp")
   cnvr_tmp <- data.frame(t(unlist(cnvr_tmp)))
   fwrite(cnvr_tmp, "TMP1", col.names = F, sep = "\t")
-  system(paste("plink --noweb --cfile /QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38.DEL --cnv-intersect TMP1 --cnv-write --out TMP2"))
+  system(paste("plink --noweb --cfile /Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38.DEL --cnv-intersect TMP1 --cnv-write --out TMP2"))
   tracks <- fread("TMP2.cnv")
   fam <- fread("TMP2.fam")
   tracks$status <- fam$V6[match(tracks$FID, fam$V1)]

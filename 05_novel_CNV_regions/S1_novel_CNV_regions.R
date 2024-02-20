@@ -1,13 +1,16 @@
 
 #========== This script identifies novel AN-associated disease-risk CNV regions and intersecting genes =========================================================
 
-# Load required R libraries
+#== Load required R libraries
 library(dplyr)
 library(data.table)
-wkdir="/QRISdata/Q4399/Anorexia/UKB/burden_analysis/SAIGE"
+
+#== Set up file paths ===
+wkdir="/Anorexia/UKB/burden_analysis/SAIGE"  ## path to SAIGE result directory
+data_path="data" ## data path to cytoBand.txt, and geneMatrix.tsv.
 
 #======= Read in Genomic cytoband information===============================================
-cytoband <- fread("cytoBand.txt", header=FALSE) %>% as.data.frame()
+cytoband <- fread(paste(data_path, "cytoBand.txt", sep="/"), header=FALSE) %>% as.data.frame()
 cytoband$CHR <- as.numeric(gsub("chr", "", cytoband$V1))
 cytoband$CHR <- gsub("X", "23", cytoband$CHR)
 cytoband$CHR <- as.numeric(cytoband$CHR)
@@ -18,12 +21,13 @@ bim <- as.data.frame(bim)
 
 #=== DELETIONS ==========================================================================================================================
 
-#=== Extract all UKB CNV deletions (rare and common CNVs) ===========
-system(paste("plink --noweb --cfile /QRISdata/Q4399/Anorexia/UKB/plink_files/CNV_final_3rdFilter_hg38 --cnv-del --cnv-write --out /QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38.DEL"))
-system(paste("plink --noweb --cfile /QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38.DEL --cnv-make-map --out /QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38.DEL"))
+#=== Extract all UKB CNV deletions (both rare and common CNVs) ===========
+system("cfile=/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38")
+system(paste("plink --noweb --cfile ${cfile} --cnv-del --cnv-write --out ${cfile}.DEL"))
+system(paste("plink --noweb --cfile ${cfile}.DEL --cnv-make-map --out ${cfile}.DEL"))
 
 #=== Identify all unique CNV deletion breakpoints (rare and common) ====================
-del_cnvs <- fread("/QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38.DEL.cnv")
+del_cnvs <- fread("/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38.DEL.cnv")
 breakpoints <- unique(c(del_cnvs$BP1, del_cnvs$BP2))
 
 #=== Load SAIGE rare CNV breakpoint GWAS results for deletions ====================
@@ -58,7 +62,7 @@ for (c in 1:23){
     fwrite(data.frame(ID = rs), rs_file, col.names = F, row.names = F, quote = F, sep = "\t")
     
     # Run PLINK: detect probes in LD
-    input <- paste0("/QRISdata/Q4399/Anorexia/UKB/plink_files/bfiles/cnv_to_PLINK_DEL_chr", chr)
+    input <- paste0("/Anorexia/UKB/plink_files/bfiles/cnv_to_PLINK_DEL_chr", chr)
     system(paste("plink",
                  "--bfile", input,
                  "--show-tags", rs_file,
@@ -81,7 +85,7 @@ for (c in 1:23){
     num <- nrow(cnvr)
     bim_c_cnv <- bim_c %>% filter(V4 >= start & V4 <= end)
     num_probes <- nrow(bim_c_cnv)
-    cnvr$freq <- (100*cnvr$AC_Allele2)/387190
+    cnvr$freq <- (100*cnvr$AC_Allele2)/387190 ## change to the sample size
     freq <- signif(cnvr[which(cnvr$ID==rs), 24],2)
     beta <- cnvr[which(cnvr$ID==rs),9]
     OR <- signif(exp(beta),2)
@@ -117,11 +121,12 @@ dels_final <- dels_ord_filter
 #=== DUPLICATIONS ==========================================================================================================================
 
 #=== Extract all UKB CNV duplications (rare and common CNVs) ===========
-system(paste("plink --noweb --cfile /QRISdata/Q4399/Anorexia/UKB/plink_files/CNV_final_3rdFilter_hg38 --cnv-dup --cnv-write --out /QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38.DUP"))
-system(paste("plink --noweb --cfile /QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38.DUP --cnv-make-map --out /QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38.DUP"))
+system("cfile=/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38")
+system(paste("plink --noweb --cfile ${cfile} --cnv-dup --cnv-write --out ${cfile}.DUP"))
+system(paste("plink --noweb --cfile ${cfile}.DUP --cnv-make-map --out ${cfile}.DUP"))
 
 #=== Identify all unique CNV deletion breakpoints (rare and common) ====================
-dup_cnvs <- fread("/QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38.DUP.cnv")
+dup_cnvs <- fread("/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38.DUP.cnv")
 breakpoints <- unique(c(dup_cnvs$BP1, dup_cnvs$BP2))
 
 #=== Load SAIGE rare CNV breakpoint GWAS results for deletions ====================
@@ -155,7 +160,7 @@ for (c in 1:23){
     fwrite(data.frame(ID = rs), rs_file, col.names = F, row.names = F, quote = F, sep = "\t")
     
     # Run PLINK: detect probes in LD
-    input <- paste0("/QRISdata/Q4399/Anorexia/UKB/plink_files/bfiles/cnv_to_PLINK_DUP_chr", chr)
+    input <- paste0("/Anorexia/UKB/plink_files/bfiles/cnv_to_PLINK_DUP_chr", chr)
     system(paste("plink",
                  "--bfile", input,
                  "--show-tags", rs_file,
@@ -176,7 +181,7 @@ for (c in 1:23){
     num <- nrow(cnvr)
     bim_c_cnv <- bim_c %>% filter(V4 >= start & V4 <= end)
     num_probes <- nrow(bim_c_cnv)
-    cnvr$freq <- (100*cnvr$AC_Allele2)/387190
+    cnvr$freq <- (100*cnvr$AC_Allele2)/387190 ## change to the sample size
     freq <- signif(cnvr[which(cnvr$ID==rs), 24],2)
     beta <- cnvr[which(cnvr$ID==rs),9]
     OR <- signif(exp(beta),2)
@@ -215,10 +220,10 @@ both_risk <- both %>% filter(OR>1 & N_Case > 0)
 both_risk_ord <- both_risk[order(both_risk$Pval),]
 
 #======= Load gene annotation file ============================================================
-genes <- read.table("geneMatrix.tsv", header=TRUE, fill=TRUE)
+genes <- read.table(paste0(data_path, "/geneMatrix.tsv"), header=TRUE, fill=TRUE)
 genes <- genes %>% filter(gene_type=="protein_coding")
 genes3 <- genes[, c(8,9,10,1)]
-fwrite(genes3, paste("CNVR/Genes",sep="/") col.names=F, sep="\t")
+fwrite(genes3, paste("CNVR/Genes",sep="/"), col.names=F, sep="\t")
 genes2 <- genes[, c(8,9,10,2)]
 fwrite(genes2, paste(wkdir, "CNVR/Genes2", sep="/"), col.names=F, sep="\t")
 
@@ -235,14 +240,14 @@ for (i in 1:nrow(both_risk_ord)){
   cnvr <- cnvs2[i,]
   fwrite(cnvr, "TMP1", col.names = F, sep = "\t")
   system(paste("bedtools intersect -wao -a TMP1",
-               "-b /QRISdata/Q4399/Anorexia/UKB/burden_analysis/SAIGE/CNVR/Genes",
+               "-b /Anorexia/UKB/burden_analysis/SAIGE/CNVR/Genes",
                "> TMP2"))
   g <- fread("TMP2")
   all <- paste(g$V8,collapse=" ")
   both_risk_ord$Genes[i] <- all
   
   system(paste("bedtools intersect -wao -a TMP1",
-               "-b /QRISdata/Q4399/Anorexia/UKB/burden_analysis/SAIGE/CNVR/Genes2",
+               "-b /Anorexia/UKB/burden_analysis/SAIGE/CNVR/Genes2",
                "> TMP2"))
   g <- fread("TMP2")
   all <- paste(g$V8,collapse=" ")
