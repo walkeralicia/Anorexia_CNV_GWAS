@@ -5,10 +5,6 @@
  # Citations
 
 If you use scripts from this Github please cite the article: ref (TBC). 
-
- # CNV Input Data
-
- In this pipeline, CNV input data is acquired from the UK Biobank (UKB) called by Kendal et al. Due to privacy restrictions, UKB CNV-GWAS results are meta-analysed with summary statistics from the Anorexia Nervosa Genetics Initiaitve (ANGI) study using Stouffer's method. 
  
  # Pipeline
 
@@ -33,6 +29,10 @@ All downstream folders describe a general CNV-burden pipeline that can be applie
 - **/05_Novel_CNV_regions** identifies novel disease-risk CNV regions (CNVRs) and plots the results.
 
 - **/06_Meta_analyses** meta-analyses locus-wide and CNV-GWAS results with a replication study's results using Stouffer's method. The subfolder **/ANGI_data** contains ANGI summary statistics used in the study to meta-analyse with the UKB.
+
+# CNV Input Data
+
+ In this pipeline, CNV input data is acquired from the UK Biobank (UKB) called by Kendal et al. Due to privacy restrictions, UKB CNV-GWAS results are meta-analysed with summary statistics from the Anorexia Nervosa Genetics Initiaitve (ANGI) study using Stouffer's method. 
 
 # CNV Annotation Input Data
 
