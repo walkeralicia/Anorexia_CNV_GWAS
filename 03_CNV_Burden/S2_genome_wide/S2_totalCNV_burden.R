@@ -1,6 +1,6 @@
 
 
-#================= This script evaluates total rare CNV burden in AN ====================================================
+#================= This script evaluates total rare CNV burden ====================================================
 
 #============= Load CNV burden function, file paths, and read in phenotypic data for covariates ========================
 
@@ -9,20 +9,23 @@ library(dplyr)
 library(data.table)
 
 # File paths and burden function
-wkdir="/QRISdata/Q4399/Anorexia/UKB/burden_analysis/overall_burden" ## path to conduct total CNV burden analyses in.
-cnv_path="/QRISdata/Q4399/Anorexia/UKB/rare_cnvs" ## path to rare CNV files
-pheno_path <- "/QRISdata/Q4399/Anorexia/UKB/pheno/All_pheno_for_UKBB_filtered.dat" ## path to phenotype file for covariates
-pheno <- read.table(pheno_path, header=T)
-source(paste(wkdir, "calculate_burden_function.R", sep="/"))
+wkdir<-"/Anorexia/UKB/burden_analysis/overall_burden" ## path to conduct total CNV burden analyses in.
+cnv_path<-"/Anorexia/UKB/rare_cnvs" ## path to rare CNV files
+pheno_path<-"/Anorexia/UKB/pheno/All_pheno_for_UKBB_filtered.dat" ## path to phenotype file for covariates
+cfile<-"UKBB_CNVs_for_AN_hg38"
+source("calculate_burden_function.R") ## Burden function
+
 
 #==========CNV burden measured by CNV length, count, prop. of mammalian constraint bases, and dosage sensitive genes =================
+
+pheno <- read.table(pheno_path, header=T)
 
 # Function to process data for a specific test type
 process_data <- function(wkdir, cnv_type, test_type, pheno) {
   res <- list()
   
   for (i in 1:length(cnv_type)) {
-    cnv <- read.table(paste0(cnv_path, "/UKBB_CNVs_for_AN_hg38.", cnv_type[i], ".cnv"), header = TRUE)
+    cnv <- read.table(paste0(cnv_path, "/", cfile,".", cnv_type[i], ".cnv"), header = TRUE)
     
     if (test_type == "Length") {
       # CNV length burden
@@ -44,7 +47,7 @@ process_data <- function(wkdir, cnv_type, test_type, pheno) {
       
     } else if (test_type == "zooConsAm") {
       # All mammalian constraint
-      cnv_info <- fread(paste0(cnv_path, "/UKBB_CNVs_for_AN_hg38.ALL.info"))
+      cnv_info <- fread(paste0(cnv_path, "/", cfile, ".ALL.info"))
       cnv <- cnv %>% mutate(tmp = row_number())
       cnv_info <- merge(cnv, cnv_info, by = "tmp")
       avg <- cnv_info %>% select(IID, zooConsAm) %>% group_by(IID) %>% summarise(avg=mean(zooConsAm)) %>% as.data.frame()
@@ -53,7 +56,7 @@ process_data <- function(wkdir, cnv_type, test_type, pheno) {
       
     } else if (test_type == "zooConsPr") {
       # Primate constraint
-      cnv_info <- fread(paste0(cnv_path, "/UKBB_CNVs_for_AN_hg38.ALL.info"))
+      cnv_info <- fread(paste0(cnv_path, "/", cfile, ".ALL.info"))
       cnv <- cnv %>% mutate(tmp = row_number())
       cnv_info <- merge(cnv, cnv_info, by = "tmp")
       avg <- cnv_info %>% select(IID, zooConsPr) %>% group_by(IID) %>% summarise(avg=mean(zooConsPr)) %>% as.data.frame()
@@ -62,7 +65,7 @@ process_data <- function(wkdir, cnv_type, test_type, pheno) {
       
     } else if (test_type == "dosage_sensitive") {
       # Dosage-sensitive constraint
-      cnv <- read.table(paste0(cnv_path, "/UKBB_CNVs_for_AN_hg38.", cnv_type[i], ".sensitive.cnv"), header = TRUE)
+      cnv <- read.table(paste0(cnv_path, "/", cfile, ".", cnv_type[i], ".sensitive.cnv"), header = TRUE)
       pheno$dosage_sensitive <- ifelse(pheno$V1 %in% cnv$FID, 1, 0)
       
     }
@@ -103,7 +106,7 @@ for (i in 1:length(lengths)){
   svtype_list <- list()
   for (k in 1:length(svtype)){
     print(svtype[k])
-    cnv <- read.table(paste0(cnv_path, "/UKBB_CNVs_for_AN_hg38.", svtype[k],".", lengths[i], ".cnv"), header=T)
+    cnv <- read.table(paste0(cnv_path, "/", cfile, ".", svtype[k],".", lengths[i], ".cnv"), header=T)
     pheno <- read.table(pheno_path, header=T)
     pheno$cnv <- as.vector(ifelse(pheno$V1%in%cnv$FID, 1, 0))
     colnames(pheno)[7] <- lengths[i]
@@ -137,7 +140,7 @@ write.table(res2, paste(wkdir, "UKBB_length_type_results.csv", sep="/"), row.nam
 
 #========== rare CNV burden split by CNV frequency (singleton up to 1%)==============================
 
-freq <- fread(paste(cnv_path, "/UKBB_CNVs_for_AN_hg38.rare.freq.cnv", sep="/"))
+freq <- fread(paste(cnv_path, "/", cfile, ".rare.freq.cnv", sep="/"))
 freq <- as.data.frame(freq)
 freq$V9 <- as.numeric(freq$V9)
 freq$V3 <- as.factor(freq$V3)

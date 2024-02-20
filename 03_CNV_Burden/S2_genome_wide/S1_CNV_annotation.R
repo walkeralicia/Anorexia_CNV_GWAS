@@ -2,7 +2,7 @@
 
 #======== This script annotates rare CNVs to dosage-sensitive genes and to mammalian constraint measures ===============================
 
-# load R packages
+#== load R packages ===
 library(dplyr)
 library(tidyverse)
 library(data.table)
@@ -11,13 +11,21 @@ library(rstatix)
 library(stringr)
 library(ggplot2)
 
+#== Set up paths =====
+
+data_path<-"data" ## path to data folder with bindata.1000.hg38.tsv.gz, geneMatrix.tsv, and collins2022-TableS7-pHaplo-pTriplo.tsv files.
+cfile_path<-"/Anorexia/UKB/rare_cnvs" ## path to hg38 UKB rare CNVs
+file_name<-"UKBB_CNVs_for_AN_hg38" ## cfile name
+p<-"plink" ## plink software
+drCNVS<-"/Anorexia/UKB/burden_analysis/drCNVs" ## path to conduct disease-risk CNV burden analyses in
+
+
 #======== Extract collins et al. dosage sensitive genes ===========================
-# File path
-path_drCNVs="/QRISdata/Q4399/Anorexia/UKB/burden_analysis/drCNVs" ## path to file with disease-risk dosage-sensitive CNVs from Collins et al.
+
 
 # Reformat list of genes, split by CNV type (i.e., triplosensitive (dups) and haploinsufficient (dels))
-collins <- read.table(paste(path_drCNVs,"collins2022-TableS7-pHaplo-pTriplo.tsv", sep="/"), header=TRUE)
-genes <- read.table(paste0(path_drCNVs, "/geneMatrix.tsv"), header=TRUE, fill=TRUE)
+collins <- read.table(paste(data_path,"collins2022-TableS7-pHaplo-pTriplo.tsv", sep="/"), header=TRUE)
+genes <- read.table(paste(data_path, "geneMatrix.tsv", sep="/"), header=TRUE, fill=TRUE)
 genes2 <- genes[, c("ensgid", "hg38h0", "h1","h2")]
 both <- merge(genes2, collins, by="ensgid", all.y=TRUE)
 haplo <- both %>% filter(pHaplo >= 0.86)
@@ -26,32 +34,25 @@ haplo2 <- haplo %>% select(hg38h0, h1, h2, ensgid)
 haplo2$hg38h0 <- gsub("chr", "", haplo2$hg38h0)
 triplo2 <- triplo %>% select(hg38h0, h1, h2, ensgid)
 triplo2$hg38h0 <- gsub("chr", "", triplo2$hg38h0)
-write.table(triplo2, paste(path_drCNVs,"triplosensitive_list.txt", sep="/"), row.names=F, col.names=F, quote=F, sep="\t")
-write.table(haplo2, paste(path_drCNVs,"haploinsufficient_list.txt", sep="/"), row.names=F, col.names=F, quote=F, sep="\t")
+write.table(triplo2, paste(drCNVs,"triplosensitive_list.txt", sep="/"), row.names=F, col.names=F, quote=F, sep="\t")
+write.table(haplo2, paste(drCNVs,"haploinsufficient_list.txt", sep="/"), row.names=F, col.names=F, quote=F, sep="\t")
 
 
 #============ Annotate rare UKB CNVs with disease-risk Collins dosage-sensitive genes ==================================
-# File paths
-p <- "/QRISdata/Q4399/software/plink-1.07-x86_64/plink"
-wkdir <- "/QRISdata/Q4399/Anorexia/UKB/rare_cnvs"
-drCNVS <- "/QRISdata/Q4399/Anorexia/UKB/burden_analysis/drCNVs"
-file_name <- "UKBB_CNVs_for_AN_hg38"
 
 # Intersections
-system(paste(p, "--noweb --cfile", paste(wkdir, paste0(file_name, ".DUP"), sep = "/"), "--cnv-intersect", paste(drCNVS, "triplosensitive_list.txt", sep = "/"), "--cnv-write", "--out", paste(wkdir, paste0(file_name, ".DUP.sensitive"), sep = "/")))
+system(paste(p, "--noweb --cfile", paste(cfile_path, paste0(file_name, ".DUP"), sep = "/"), "--cnv-intersect", paste(drCNVS, "triplosensitive_list.txt", sep = "/"), "--cnv-write", "--out", paste(cfile_path, paste0(file_name, ".DUP.sensitive"), sep = "/")))
 
-system(paste(p, "--noweb --cfile", paste(wkdir, paste0(file_name, ".DUP.sensitive"), sep = "/"), "--cnv-make-map", "--out", paste(wkdir, paste0(file_name, ".DUP.sensitive"), sep = "/")))
+system(paste(p, "--noweb --cfile", paste(cfile_path, paste0(file_name, ".DUP.sensitive"), sep = "/"), "--cnv-make-map", "--out", paste(cfile_path, paste0(file_name, ".DUP.sensitive"), sep = "/")))
 
-system(paste(p, "--noweb --cfile", paste(wkdir, paste0(file_name, ".DEL"), sep = "/"), "--cnv-intersect", paste(drCNVS, "haploinsufficient_list.txt", sep = "/"), "--cnv-write", "--out", paste(wkdir, paste0(file_name, ".DEL.sensitive"), sep = "/")))
+system(paste(p, "--noweb --cfile", paste(cfile_path, paste0(file_name, ".DEL"), sep = "/"), "--cnv-intersect", paste(drCNVS, "haploinsufficient_list.txt", sep = "/"), "--cnv-write", "--out", paste(cfile_path, paste0(file_name, ".DEL.sensitive"), sep = "/")))
 
-system(paste(p, "--noweb --cfile", paste(wkdir, paste0(file_name, ".DEL.sensitive"), sep = "/"), "--cnv-make-map", "--out", paste(wkdir, paste0(file_name, ".DEL.sensitive"), sep = "/")))
+system(paste(p, "--noweb --cfile", paste(cfile_path, paste0(file_name, ".DEL.sensitive"), sep = "/"), "--cnv-make-map", "--out", paste(cfile_path, paste0(file_name, ".DEL.sensitive"), sep = "/")))
 
 
 #================ Annotate rare CNVs with mammalian constraint (1K bins from Pat Sullivan)======================
-# File path
-wkdir="/QRISdata/Q4399/Anorexia/UKB/rare_cnvs" ## path to conduct total CNV burden analyses in.
 
-a <- fread(paste(wkdir, "UKBB_CNVs_for_AN_hg38.ALL.cnv", sep="/")) %>% 
+a <- fread(paste0(cfile_path, "/", file_name, ".ALL.cnv")) %>% 
   mutate(chr = ifelse(CHR==23, "chrX", paste0("chr", CHR)),
          tmp = row_number()) %>% 
   arrange(chr, BP1, BP2) %>% 
@@ -64,7 +65,7 @@ f1 <- a %>%
   select(chr, start0, end, tmp)
 
 # number of bases per bin, 3,031,053 bins
-f2 <- fread(paste(wkdir, "bindata.1000.hg38.tsv.gz", sep="/")) %>% 
+f2 <- fread(paste(data_path, "bindata.1000.hg38.tsv.gz", sep="/")) %>% 
   filter(chr != "chrY") %>% 
   select(chr, start0, end, N, GC, k24gt90.sum, zooBasesFdr05, zooPrimate,
          cds, tssM50, els.sum:anchor.sum) 
@@ -101,5 +102,5 @@ f4 <- f4 %>%
   mutate(across(Nbase:anchor, ~ .x/(i.end-i.start0))) %>% 
   select(-i.start0, -i.end)
 
-write.table(f4, paste(wkdir, "UKBB_CNVs_for_AN_hg38.ALL.info", sep="/"), row.names=F, col.names=T, quote=F, sep="\t")
+write.table(f4, paste0(cfile_path, "/", file_name, ".ALL.info"), row.names=F, col.names=T, quote=F, sep="\t")
 
