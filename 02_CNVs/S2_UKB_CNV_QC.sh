@@ -5,17 +5,16 @@
 
 #============ create plink .map file for cfile data  (PLINK V1.07)===================================
 # File paths
-p="/QRISdata/Q4399/software/plink-1.07-x86_64/plink"
-cfile="/QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN"
+p="plink"
+cfile="/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN"
 
 ${p} --noweb --cfile ${cfile} --cnv-make-map --out ${cfile}
 
 
 #=============== hg19 to hg38 liftover ===============================================================
-# File paths
-cfile="/QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN"
-liftOver="/QRISdata/Q4399/software/liftOver"
-chain_file="/QRISdata/Q4399/software/hg19ToHg38.over.chain"
+# liftover software and chain file
+liftOver="liftOver"
+chain_file="hg19ToHg38.over.chain"
 
 # Perform .cnv to .bed conversion
 # .bed format is chr, BP1, BP2, ID
@@ -43,16 +42,16 @@ rm "${cfile}_temp.cnv" "${cfile}_temp.sorted.cnv" "${cfile}_postliftover.sorted.
 
 
 #================ create new plink .fam and .map cfiles with hg38 coordinates=========================================
-cp UKBB_CNVs_for_AN.fam UKBB_CNVs_for_AN_hg38.fam
-${p} --noweb --cfile UKBB_CNVs_for_AN_hg38 --cnv-make-map --out UKBB_CNVs_for_AN_hg38
+cp ${cfile}.fam ${cfile}_hg38.fam
+${p} --noweb --cfile ${cfile}_hg38 --cnv-make-map --out ${cfile}_hg38
 
 
 #=============== create a second set of plink cfiles for BMI as the outcome ============================================
 # File paths
-cfile="/QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38"
-bmi_file="/QRISdata/Q2909/pheno/RAP/OP_year_080623_participant.csv"
-map_file="/QRISdata/Q2909/pheno/RunID_670814_CNV/ukb12505bridge14421.txt"
-output_file="/QRISdata/Q4399/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38_BMI"
+cfile="/Anorexia/UKB/plink_files/UKBB_CNVs_for_AN_hg38"
+bmi_file="OP_year_080623_participant.csv"
+map_file="ukb12505bridge14421.txt"
+output_file='${cfile}"_BMI"'
 
 # Step 1: Extract relevant columns from the fam file
 awk '{print $2, $3, $4, $5, $6}' "${cfile}.fam" > "${cfile}.temp.fam"

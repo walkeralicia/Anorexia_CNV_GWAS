@@ -26,7 +26,7 @@ library(tidyverse)
 
 ## mental health questionnaire
 MHQ <- read.table(
-  "/QRISdata/Q2909/pheno/10743_12505_UKBiobank_mentalHealth_260917.tab",
+  "10743_12505_UKBiobank_mentalHealth_260917.tab",
   sep="\t", header=TRUE)
 
 df <- MHQ %>%
@@ -70,7 +70,7 @@ colnames(MHQ_dat_cases) <- c("eid", "AN_MHQ")
 # Within the hospital inpatient dataset, each inpatient episode for a participant is stored 
 # as a single record, i.e. a row of data, or as multiple contiguous records. 
 hesin_diag_diskframe <- read.table(
-  "/QRISdata/Q2909/pheno/HESIN/hesin_diag_21122022.txt",
+  "hesin_diag_21122022.txt",
   sep="\t", header=TRUE)
 
 hesin_diag <- hesin_diag_diskframe %>%
@@ -83,7 +83,7 @@ hesin_diag <- hesin_diag_diskframe %>%
 ### ICD9 - WHO International Classification of Diseases
 
 ICD9 <- read.table(
-  "/QRISdata/Q2909/pheno/RunID_43210_Aug2020/Diagnosis/ICD9_diagnosis.tab",
+  "ICD9_diagnosis.tab",
   sep="\t", header=TRUE)
 
 
@@ -588,7 +588,7 @@ gc()
 ## Death records: 
  
 death_cause <- read.table(
-  "/QRISdata/Q2909/pheno/DEATH/death_cause_221221.txt",
+  "death_cause_221221.txt",
   sep="\t", header=TRUE)
 
 # Death due to anorexia nervosa
@@ -635,7 +635,7 @@ dat_interim <- readRDS("interim_death_MHQ_HES_UKB_PGCED3_case_data.rds")
 ## GP clinical event records:
 # Again, each row is a data entry rather than a participant.
 gp_clinical_diskframe <- read.table(
-  "/QRISdata/Q2909/pheno/GP/gp_clinical_211222.txt",
+  "gp_clinical_211222.txt",
   sep="\t", header=TRUE, fill=TRUE)
 
 
@@ -1354,7 +1354,7 @@ dat$cross_val_excluded <- ifelse(dat$eid%in%dat_filt$eid, 1, 0)
 ##How many of these participants have type 1 diabetes? 
 ##additional exclusion criteria type 1 diabetes}
 hesin_diag_diskframe <- read.table(
-  "/QRISdata/Q2909/pheno/HESIN/hesin_diag_21122022.txt",
+  "hesin_diag_21122022.txt",
   sep="\t", header=TRUE)
 
 hesin_diag <- hesin_diag_diskframe %>%
@@ -1742,7 +1742,7 @@ dat_control_excluded <- exclusion_dat2[!is.na(exclusion_dat2$anorexia_excluded) 
 
 #COVARIATES read in data
 f <- read.table(
-  "/QRISdata/Q2909/pheno/RunID_43210_Aug2020/Quant_heritable/Quantitative_pheno.tab",
+  "Quantitative_pheno.tab",
   sep="\t", header=TRUE)
 
 
@@ -1763,7 +1763,7 @@ saveRDS(object = f2, file = paste0("small_phenotype_subset.rds"))
 
 ## PCs:
 covar_PCs <- read.table(
-  "/QRISdata/Q2909/v2Samples/ukbEUR_PC40_HM3excludeRegions_v2.txt",
+  "ukbEUR_PC40_HM3excludeRegions_v2.txt",
   sep="\t", header=TRUE)
 
 covar_PCs_select_columns <- covar_PCs %>%
@@ -1775,27 +1775,27 @@ saveRDS(object = covar_PCs_select_columns, file = paste0("PC_covariates.rds"))
 # Extract AN phenotype
 
 ## AN Cases that do not meet the inclusion criteria (440 people)
-exclusion_dat <- readRDS("/QRISdata/Q4399/Anorexia/UKB/AN_IDs/UKB_PGCED3_exclusion_dat.rds")
+exclusion_dat <- readRDS("UKB_PGCED3_exclusion_dat.rds")
 controls <- exclusion_dat[exclusion_dat$AN_case==0,]
 cases_excluded <- controls[!is.na(controls$anorexia_excluded) |
                              controls$cross_val_excluded==1 |
                              !is.na(controls$anorexia_not_excluded_diabetes) |
                              !is.na(controls$anorexia_not_excluded_possible_diabetes), ]
 cases_excluded_ids <- cases_excluded$eid
-write.table(cases_excluded_ids, "/QRISdata/Q4399/Anorexia/UKB/AN_IDs/cases_excluded_ids.txt", col.names=F, row.names=F, quote=F, sep="\t")
+write.table(cases_excluded_ids, "cases_excluded_ids.txt", col.names=F, row.names=F, quote=F, sep="\t")
 
 ## AN cases (white and non-withdrawn) (1,327 people)
-withdrawn <- read.table("/QRISdata/Q2909/v2Samples/ukb_sampleExclusions_v2_and_withdrawn_w12505_20220222.list")
-eur <- read.table("/QRISdata/Q2909/new_ancestry_calls_2019/projection/EUR.id")
+withdrawn <- read.table("ukb_sampleExclusions_v2_and_withdrawn_w12505_20220222.list")
+eur <- read.table("EUR.id")
 
-AN <- readRDS("/QRISdata/Q4399/Anorexia/UKB/AN_IDs/UKB_PGCED3_only_case_data_070322.rds")
+AN <- readRDS("UKB_PGCED3_only_case_data_070322.rds")
 AN_case <- AN[AN$AN_case==1,] # 1404
 AN_case_check <- AN_case[!AN_case$eid%in%cases_excluded_ids,]
 cases <- AN_case_check
 cases$eur <- ifelse(cases$eid%in%eur$V1, 1, 0)
 cases$withdrawn <- ifelse(cases$eid%in%withdrawn$V1, 1, 0)
 cases2 <- cases[cases$eur==1 & cases$withdrawn == 0, ]
-write.table(cases2, "/QRISdata/Q4399/Anorexia/UKB/AN_IDs/case_ids.txt", col.names=F, row.names=F, quote=F, sep="\t")
+write.table(cases2, "/Anorexia/UKB/AN_IDs/case_ids.txt", col.names=F, row.names=F, quote=F, sep="\t")
 
 
 ## AN controls (white and non-withdrawn) (406,256 people)
@@ -1804,5 +1804,5 @@ controls <- controls_keep
 controls$eur <- ifelse(controls$eid%in%eur$V1, 1, 0)
 controls$withdrawn <- ifelse(controls$eid%in%withdrawn$V1, 1, 0)
 controls2 <- controls[controls$eur==1 & controls$withdrawn == 0, ]
-write.table(controls2, "/QRISdata/Q4399/Anorexia/UKB/AN_IDs/controls_ids.txt", col.names=F, row.names=F, quote=F, sep="\t")
+write.table(controls2, "/Anorexia/UKB/AN_IDs/controls_ids.txt", col.names=F, row.names=F, quote=F, sep="\t")
 
