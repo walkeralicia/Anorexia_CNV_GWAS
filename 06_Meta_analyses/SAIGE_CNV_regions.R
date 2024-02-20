@@ -2,13 +2,16 @@
 
 #================ This script extracts UKB CNVs intersecting novel ANGI CNV regions associated with AN status =====================================
 
-# load R libraries
+#== Load R libraries ==
 library(dplyr)
 library(data.table)
 
-# load data
-cnvrs <- read.csv("/QRISdata/Q4399/Anorexia/ANGI/results/ANGI_CNVR_zoonomia.csv", header=T)
+#== Set up paths ==
 wkdir <- "/QRISdata/Q4399/Anorexia/UKB/burden_analysis/SAIGE/step2"
+ANGI_data<-"ANGI_data" ## path to folder with ANGI meta-analyses results
+
+#== Load data ==
+cnvrs <- read.csv(paste(ANGI_data, "ANGI_CNVR_zoonomia.csv", sep ="/"), header=T)
 saige_dels <- read.table(paste(wkdir, "DEL_SAIGE_step2_AN_rare.txt", sep="/"), header=T)
 saige_dups <- read.table(paste(wkdir, "DUP_SAIGE_step2_AN_rare.txt", sep="/"), header=T)
 

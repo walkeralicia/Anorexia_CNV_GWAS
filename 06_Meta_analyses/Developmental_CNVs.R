@@ -1,19 +1,24 @@
 
 #============= This script meta-analyses the UKB and ANGI developmental CNV burden results =============================
 
-# read in R libraries =================
+#== Read in required R libraries =================
 library(logistf)
 library(readxl)
 library(stringr)
 library(dplyr)
 options(scipen=999)
 
-## Read in UKB and ANGI results ================
-wkdir="/QRISdata/Q4399/Anorexia/UKB/burden_analysis/devCNVs"
-ukb <- read.table(paste(wkdir, "UKBB_devCNVs_burden.txt", sep="/"), header=T)
-angi <- read.table("/QRISdata/Q4399/Anorexia/ANGI/results/ANGI_devCNVs_burden.txt", header=T)
+#== Set paths ===
+wkdir<-"/Anorexia/UKB/burden_analysis/devCNVs"
+data_path<-"data" ## path to CNV_List.xlsx
+ANGI_data<-"ANGI_data" ## path to folder with ANGI meta-analyses results
 
-## split data by method and reformat ==========
+
+#== Read in UKB and ANGI results ================
+ukb <- read.table(paste(wkdir, "UKBB_devCNVs_burden.txt", sep="/"), header=T)
+angi <- read.table(paste(ANGI_data, "ANGI_devCNVs_burden.txt", sep="/"), header=T)
+
+#== Split data by method and reformat ==========
 methods <- c("Logistic", "Unadjusted_Logistic", "Firth", "Unadjusted_Firth")
 
 results <- lapply(methods, function(method) {
@@ -49,9 +54,9 @@ stouffer$LCI_meta <- round(exp(stouffer$beta_meta-1.96*stouffer$se_meta), stouff
 stouffer$HCI_meta <- round(exp(stouffer$beta_meta+1.96*stouffer$se_meta), stouffer$dp)
 stouffer$CI_meta <- paste0("(", stouffer$LCI_meta, "-", stouffer$HCI_meta, ")")
 
-# annotate the information about the pleiotropic CNVs to the result file ========================================================================
+# Annotate the information about the pleiotropic CNVs to the result file ========================================================================
 
-cnvs <- read_excel(paste(wkdir, "CNV_List.xlsx", sep="/"), sheet=1)
+cnvs <- read_excel(paste(data_path, "CNV_List.xlsx", sep="/"), sheet=1)
 cnvs <- as.data.frame(cnvs)
 cnvs$ID <- 1:nrow(cnvs)
 
@@ -77,8 +82,8 @@ res <- comb %>%
 
 # Fisher's exact test to compare CNV control frequency between ANGI and the UKB ===========
 RES <- res 
-ukb_controls = 385930
-angi_controls = 5044
+ukb_controls = 385930 # UKB Control Sample Size
+angi_controls = 5044 ## ANGI Control Sample Size
 RES$ANGI_Cont_notN <- angi_controls-as.numeric(RES$ANGI_Cont_N)
 RES$UKB_Cont_notN <- ukb_controls-as.numeric(RES$UKB_Cont_N)
 n=length(RES$ID)

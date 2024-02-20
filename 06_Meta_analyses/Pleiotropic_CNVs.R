@@ -2,17 +2,22 @@
 
 #============= This script meta-analyses the UKB and ANGI pleiotropic CNV burden results =============================
 
-# read in R libraries =================
+#== Read in R libraries =================
 library(logistf)
 library(readxl)
 library(stringr)
 library(dplyr)
 options(scipen=999)
 
-## Read in UKB and ANGI results ================
-wkdir="/QRISdata/Q4399/Anorexia/UKB/burden_analysis/drCNVs"
+#== Set up paths ==
+wkdir="/Anorexia/UKB/burden_analysis/drCNVs"
+data_path<-"data" ## path to 1-s2.0-S0092867422007887-mmc4.xlsx
+ANGI_data<-"ANGI_data" ## path to folder with ANGI meta-analyses results
+
+
+#== Read in UKB and ANGI results =======================================================================
 ukb <- read.table(paste(wkdir, "UKBB_drCNVs_burden.txt", sep="/"), header=T)
-angi <- read.table("/QRISdata/Q4399/Anorexia/ANGI/results/ANGI_drCNVs_burden.txt", header=T)
+angi <- read.table(paste(ANGI_data, "ANGI_drCNVs_burden.txt", sep="/"), header=T)
 
 ## split data by method and reformat ==========
 methods <- c("Logistic", "Unadjusted_Logistic", "Firth", "Unadjusted_Firth")
@@ -56,7 +61,7 @@ stouffer <-stouffer[order(stouffer$Stouffer_onesidedPvalue),]
 
 # annotate the information about the pleiotropic CNVs to the result file ========================================================================
 
-collins <- read_excel(paste(wkdir, "1-s2.0-S0092867422007887-mmc4.xlsx", sep="/"), sheet=1)
+collins <- read_excel(paste(data_path, "1-s2.0-S0092867422007887-mmc4.xlsx", sep="/"), sheet=1)
 collins <- as.data.frame(collins)
 collins$Location <- paste0(collins$Chrom, ":", collins$Start, ":", collins$End)
 collins$Genotype <- ifelse(collins$'CNV Type' == "DEL", "Deletion", "Duplication")
