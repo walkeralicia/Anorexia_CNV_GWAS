@@ -1,6 +1,6 @@
 ﻿# Genome-wide CNV Association Study
 
- This Github contains a pipeline to conduct a genome-wide copy-number-variant association study (CNV-GWAS) and accompanies the article "Genome-wide CNV-association study in 8,674 individuals with anorexia nervosa". 
+ This Github contains a pipeline to conduct a genome-wide copy-number-variant association study (CNV-GWAS) and accompanies the article "Genome-wide CNV-association study in 7,414 individuals with anorexia nervosa". 
 
  # Citations
 
@@ -10,7 +10,7 @@ If you use scripts from this Github please cite the article: ref (TBC).
 
 Folders **/01_Samples** and **/02_CNVs** describe Anorexia Nervosa (AN) phenotype extraction and CNV-level quality-control specific to acquired UK Biobank (UKB) input data. 
 
-All downstream folders describe a general CNV-burden pipeline that can be applied on any CNV data that is in PLINK cfile format (i.e., .cnv, .fam, .map). Moreover, any set of covariates (e.g., PCs, Sex, Age, Array type) and trait (binary or continuous) of interest can be used. 
+All downstream folders describe a general CNV-burden pipeline that can be applied on any CNV data that is in PLINK cfile format (i.e., .cnv, .fam, .map). Moreover, any set of covariates (e.g., PCs, Sex, Age, Array type) and any binary or continuous trait of interest can be used. 
 
  Folders with scripts:
 
