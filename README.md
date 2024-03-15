@@ -8,9 +8,9 @@ If you use scripts from this Github please cite the article: ref (TBC).
  
  # Pipeline
 
-Folders **/01_Samples** and **/02_CNVs** describe Anorexia Nervosa (AN) phenotype extraction and CNV-level quality-control specific to acquired UK Biobank (UKB) input data. 
+All folders downstream of and including **/03_CNV_Burden** describe a CNV burden pipeline that can be applied on any CNV data that is in PLINK cfile format (i.e., .cnv, .fam, .map). Moreover, the pipeline can be applied to any binary or continuous trait of interest, and any set of covariates (e.g., PCs, Sex, Age, Array type) can be used. 
 
-All downstream folders describe a general CNV-burden pipeline that can be applied on any CNV data that is in PLINK cfile format (i.e., .cnv, .fam, .map). Moreover, any set of covariates (e.g., PCs, Sex, Age, Array type) and any binary or continuous trait of interest can be used. 
+Folders **/01_Samples** and **/02_CNVs** describe Anorexia Nervosa (AN) phenotype extraction and CNV-level quality-control specific to acquired UK Biobank (UKB) input data. 
 
  Folders with scripts:
 
