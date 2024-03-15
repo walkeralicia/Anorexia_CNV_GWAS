@@ -22,7 +22,7 @@ Folders **/01_Samples** and **/02_CNVs** describe Anorexia Nervosa (AN) phenotyp
 
      **/S2_genome_wide** to conduct total genome-wide CNV burden analyses.
    
-     **/S2_locus_wide** to conduct locus-wide CNV burden analyses using two sets of CNV lists; 1) a set of 167 dosage-sensitive pleiotropic CNVs; 2) a set of 67 well-established syndromic CNVs.
+     **/S2_locus_wide** to conduct locus-wide CNV burden analyses using two sets of CNV lists; 1) a set of 178 dosage-sensitive pleiotropic CNVs; 2) a set of 67 well-established syndromic CNVs.
 
 - **/04_CNV_breakpoint_GWAS** converts CNV breakpoint input data from PLINK cfile format into PLINK bfile format to then conduct a CNV-GWAS.
 
