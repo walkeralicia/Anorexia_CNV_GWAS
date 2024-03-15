@@ -11,13 +11,39 @@ library(rstatix)
 library(stringr)
 library(ggplot2)
 
-#== Set up paths =====
+#== Set up paths ==================================================
 
 data_path<-"data" ## path to data folder with bindata.1000.hg38.tsv.gz, geneMatrix.tsv, and collins2022-TableS7-pHaplo-pTriplo.tsv files.
 cfile_path<-"/Anorexia/UKB/rare_cnvs" ## path to hg38 UKB rare CNVs
 file_name<-"UKBB_CNVs_for_AN_hg38" ## cfile name
 p<-"plink" ## plink software
 drCNVS<-"/Anorexia/UKB/burden_analysis/drCNVs" ## path to conduct disease-risk CNV burden analyses in
+
+#====== First calculate the median CNV length, the average number of total CNVs, duplications, and deletions per individual =====================
+
+a <- fread(paste0(cfile_path, "/", file_name, ".ALL.cnv"))
+
+# Median CNV Length
+a$length <- a$BP2-a$BP1
+med_length <- median(a$length)
+
+# Average number of CNVs per individual
+# ALL
+per_person <- a %>%
+  group_by(IID) %>%
+  summarise(count = n())
+average <- mean(per_person$count)
+# Duplications
+a$group <- ifelse(a$TYPE<2, "DEL", "DUP")
+dups_per_person <- a %>%
+  group_by(IID) %>%
+  summarise(count = sum(group == "DUP"))
+dups_average <- mean(dups_per_person$count)
+# Deletions
+dels_per_person <- a %>%
+  group_by(IID) %>%
+  summarise(count = sum(group == "DEL"))
+dels_average <- mean(dels_per_person$count)
 
 
 #======== Extract collins et al. dosage sensitive genes ===========================
