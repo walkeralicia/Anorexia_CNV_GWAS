@@ -7,6 +7,9 @@
 # Load required R libraries
 library(dplyr)
 library(data.table)
+library(ggplot2)
+library(ggpubr)
+library(gridExtra)
 
 # File paths and burden function
 wkdir<-"/Anorexia/UKB/burden_analysis/overall_burden" ## path to conduct total CNV burden analyses in.
@@ -172,5 +175,55 @@ count_list_all <- do.call(rbind, count_list) %>% as.data.frame()
 count_list_all$Test <- unique
 
 write.table(count_list_all, paste(wkdir, "UKBB_rare_counts.csv", sep="/"), col.names = T, row.names = F, sep=",", quote=F)
+
+
+#================ Create Plots =========================================================================
+
+
+## Plot for CNV burden split by length and type ===============
+dat <- read.csv(paste(wkdir, "UKBB_length_type_results.csv", sep="/"), header=TRUE)
+dat$index <- 1:dim(dat)[1]
+dat$Type <- ifelse(dat$Type=="Deletions and Duplications", "Both CNV Types", 
+                   ifelse(dat$Type=="Deletions", "Deletion-only", "Duplication-only"))
+dat$Type <- factor(dat$Type, levels=c("Deletion-only", "Duplication-only", "Both CNV Types"))
+
+p1 <- ggplot(data=dat, aes(x=OR, y=Length, color=Type)) +
+  geom_errorbar(aes(xmin=lower, xmax = upper), width=0.4, linewidth = 6, position = position_dodge(width = 0.6)) +
+  geom_point(size=12, position = position_dodge(width = 0.6))  +
+  labs(x='OR', y = 'CNV Length', tag = "B") +
+  geom_vline(xintercept=1, color='black', linetype='dashed', alpha=2, linewidth=1.5) +
+  xlim(0.5, 1.7) +
+  scale_color_manual(values = c("Both CNV Types" = "#AF58BA", "Duplication-only" = "#F28522", "Deletion-only" = "#009E73")) + 
+  scale_y_discrete(limits = c("All", "20-100kB", "100-200kB", "200-500kB", ">500kB")) +
+  theme_minimal(base_size=110) +
+  scale_x_continuous(breaks = c(0.75, 1, 1.25))
+
+## Plot for CNV burden split by CNV frequency
+
+rare <- read.csv(paste(wkdir, "UKBB_rare_counts.csv", sep="/"), header=TRUE)
+rare$lower <- as.numeric(rare$lower)
+rare$upper <- as.numeric(rare$upper)
+rare$OR <- as.numeric(rare$OR)
+rare$Pvalue <- as.numeric(rare$Pvalue)
+rare$Pvalue <- signif(ifelse(rare$OR>1, rare$Pvalue/2, 1-(rare$Pvalue/2)),3)
+
+p2 <- ggplot(data=rare, aes(x=OR, y=CNV_Count)) +
+  geom_errorbar(aes(xmin=lower, xmax = upper), width=0.2, linewidth = 6, color="#AF58BA") +
+  geom_point(size=12, color="#AF58BA")  +
+  labs(y='UKBB rCNV Count', x = 'OR', tag = "A") +
+  geom_vline(xintercept=1, color='black', linetype='dashed', alpha=2, linewidth=1.5) +
+  scale_y_discrete(limits = c("Singleton", "2-5", "6-10", "11-100", "101-1000","1001-1500", "1501-3872")) +
+  theme_minimal(base_size=110) +
+  xlim(c(0.7, 1.3))
+
+
+## Print plots
+all_plots <- ggarrange(p2, p1, 
+                       ncol = 2, widths=c(2,3))
+
+png(filename = paste(wkdir, "CNV_burden_plot.png", sep="/"),width = 80, height = 30, units='in', bg="white", res=300, type=c("cairo"))
+print(all_plots)
+dev.off()
+
 
 
