@@ -1,16 +1,16 @@
 ﻿# Genome-wide CNV Association Study
 
- This Github contains a pipeline to conduct a genome-wide copy-number-variant association study (CNV-GWAS) and accompanies the article "Genome-wide CNV-association study in 7,414 individuals with anorexia nervosa". 
+ This Github contains a pipeline to conduct a genome-wide copy-number-variant association study (CNV-GWAS) and accompanies the article "Genome-wide copy number variant association study with anorexia nervosa". 
 
  # Citations
 
-If you use scripts from this Github please cite the article: ref (TBC). 
+If you use scripts from this Github please consider citing the article: ref (TBC). 
  
  # Pipeline
 
-Folders **/01_Samples** and **/02_CNVs** describe Anorexia Nervosa (AN) phenotype extraction and CNV-level quality-control specific to acquired UK Biobank (UKB) input data. 
+All folders downstream of and including **/03_CNV_Burden** describe a CNV burden pipeline that can be applied on any CNV data that is in PLINK cfile format (i.e., .cnv, .fam, .map). Moreover, the pipeline can be applied to any binary or continuous trait of interest and to any set of covariates (e.g., principal components, sex, age, array type).
 
-All downstream folders describe a general CNV-burden pipeline that can be applied on any CNV data that is in PLINK cfile format (i.e., .cnv, .fam, .map). Moreover, any set of covariates (e.g., PCs, Sex, Age, Array type) and any binary or continuous trait of interest can be used. 
+Folders **/01_Samples** and **/02_CNVs** describe Anorexia Nervosa (AN) phenotype extraction and CNV-level quality-control specific to acquired UK Biobank (UKB) input data. 
 
  Folders with scripts:
 
@@ -22,7 +22,7 @@ All downstream folders describe a general CNV-burden pipeline that can be applie
 
      **/S2_genome_wide** to conduct total genome-wide CNV burden analyses.
    
-     **/S2_locus_wide** to conduct locus-wide CNV burden analyses using two sets of CNV lists; 1) a set of 167 dosage-sensitive pleiotropic CNVs; 2) a set of 67 well-established syndromic CNVs.
+     **/S2_locus_wide** to conduct locus-wide CNV burden analyses using two sets of CNV lists; 1) a set of 178 dosage-sensitive pleiotropic CNVs; 2) a set of 67 well-established syndromic CNVs.
 
 - **/04_CNV_breakpoint_GWAS** converts CNV breakpoint input data from PLINK cfile format into PLINK bfile format to then conduct a CNV-GWAS.
 
