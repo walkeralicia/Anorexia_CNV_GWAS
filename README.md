@@ -1,6 +1,6 @@
 ﻿# Genome-wide CNV Association Study
 
- This Github contains a pipeline to conduct a genome-wide copy-number-variant association study (CNV-GWAS) and accompanies the article "Genome-wide copy number variant association study with anorexia nervosa". 
+ This Github contains a pipeline to conduct a genome-wide copy-number-variant association study (CNV-GWAS) and accompanies the article "Genome-wide copy number variation association study with anorexia nervosa". 
 
  # Citations
 
