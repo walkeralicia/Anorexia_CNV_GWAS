@@ -32,7 +32,7 @@ Folders **/01_Samples** and **/02_CNVs** describe Anorexia Nervosa (AN) phenotyp
 
 # CNV Input Data
 
-In this pipeline, CNV input data is acquired from the UKB called by Kendal et al. Due to privacy restrictions, UKB CNV-GWAS results are meta-analysed with summary statistics from ANGI using Stouffer's method. 
+In this pipeline, CNV input data is acquired from the UKB called by Kendal et al. Due to privacy restrictions, UKB CNV-GWAS results are meta-analysed with summary statistics from the Anorexia Nervosa Genetics Initiative (ANGI) using Stouffer's method. 
 
 # CNV Annotation Input Data
 
