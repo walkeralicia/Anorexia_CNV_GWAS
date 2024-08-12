@@ -12,9 +12,9 @@ options(scipen=999)
 #=== AN controls ==============================================================================================================================
 
 # read in data ==================
-wkdir="/QRISdata/Q4399/Anorexia/UKB/burden_analysis/devCNVs/BMI"
+wkdir="/Anorexia/UKB/burden_analysis/devCNVs/BMI"
 ukb <- read.table(paste(wkdir, "UKBB_devCNVs_BMI_controls.txt", sep="/"), header=T)
-angi <- read.table("/QRISdata/Q4399/Anorexia/ANGI/results/ANGI_devCNVs_BMI_controls.txt", header=T)
+angi <- read.table("/Anorexia/ANGI/results/ANGI_devCNVs_BMI_controls.txt", header=T)
 stouffer <- merge(angi, ukb, by = c("Index"), all=TRUE)
 
 # stouffer's method =================
@@ -32,7 +32,7 @@ stouffer$CI_meta <- paste0("(", stouffer$LCI_meta, "-", stouffer$HCI_meta, ")")
 
 # annotate the information about the pleiotropic CNVs to the result file =====================
 
-cnvs <- read_excel("/QRISdata/Q4399/Anorexia/UKB/burden_analysis/devCNVs/CNV_List.xlsx", sheet=1)
+cnvs <- read_excel("/Anorexia/UKB/burden_analysis/devCNVs/CNV_List.xlsx", sheet=1)
 cnvs <- as.data.frame(cnvs)
 cnvs$ID <- 1:nrow(cnvs)
 comb <- merge(cnvs, stouffer, by.x = "ID", by.y="Index", all.x=TRUE)
@@ -59,9 +59,9 @@ write.csv(paper, paste(wkdir, "devCNVs_BMI_controls_sig.csv", sep="/"),  row.nam
 #========= AN cases===============================================================================================================================
 
 # read in data ==================
-wkdir="/QRISdata/Q4399/Anorexia/UKB/burden_analysis/devCNVs/BMI"
+wkdir="/Anorexia/UKB/burden_analysis/devCNVs/BMI"
 ukb <- read.table(paste(wkdir, "UKBB_devCNVs_BMI_cases.txt", sep="/"), header=T)
-angi <- read.table("/QRISdata/Q4399/Anorexia/ANGI/results/ANGI_devCNVs_BMI_cases.txt", header=T)
+angi <- read.table("/Anorexia/ANGI/results/ANGI_devCNVs_BMI_cases.txt", header=T)
 stouffer <- merge(angi, ukb, by = c("Index"), all=TRUE)
 
 # stouffer's method =================
@@ -79,7 +79,7 @@ stouffer$CI_meta <- paste0("(", stouffer$LCI_meta, "-", stouffer$HCI_meta, ")")
 
 # annotate the information about the pleiotropic CNVs to the result file =====================
 
-cnvs <- read_excel("/QRISdata/Q4399/Anorexia/UKB/burden_analysis/devCNVs/CNV_List.xlsx", sheet=1)
+cnvs <- read_excel("/Anorexia/UKB/burden_analysis/devCNVs/CNV_List.xlsx", sheet=1)
 cnvs <- as.data.frame(cnvs)
 cnvs$ID <- 1:nrow(cnvs)
 comb <- merge(cnvs, stouffer, by.x = "ID", by.y="Index", all.x=TRUE)
