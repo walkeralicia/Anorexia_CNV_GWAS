@@ -28,7 +28,7 @@ Folders **/01_Samples** and **/02_CNVs** describe Anorexia Nervosa (AN) phenotyp
 
 - **/05_Novel_CNV_regions** identifies novel disease-risk CNV regions (CNVRs) and plots results.
 
-- **/06_Meta_analyses** meta-analyses locus-wide results with a replication study's results using Stouffer's method. The subfolder **/ANGI_data** contains Anorexia Nervosa Genetics Initiative (ANGI) summary statistics used in the cited study to meta-analyse with the UKB. The subfolder contains summary statistics for CNVs associated with AN status, BMI in AN cases, and BMI in AN controls. 
+- **/06_Meta_analyses** meta-analyses locus-wide results with a replication study's results using Stouffer's method. The subfolder **/ANGI_data** contains Anorexia Nervosa Genetics Initiative (ANGI) summary statistics for the 21 novel AN-associated CNVR used in the cited study to meta-analyse with the UKB.
 
 # CNV Input Data
 
