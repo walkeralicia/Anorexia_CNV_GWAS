@@ -4,7 +4,7 @@
 
  # Citations
 
-If you use scripts from this Github please consider citing the article: ref (TBC). 
+If you use scripts from this Github please consider citing the article: Walker, A., Karlsson, R., Szatkiewicz, J.P. et al. Genome-wide copy number variation association study in anorexia nervosa. Mol Psychiatry (2024). https://doi.org/10.1038/s41380-024-02811-2
  
  # Pipeline
 
